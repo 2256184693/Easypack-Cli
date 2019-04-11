@@ -1,11 +1,27 @@
 #!/usr/bin/env node
 
-const program = require('commander')
+const path = require('path')
 
-program
-  .version(require('../package').version)
-  .usage('<command> [options]')
-  .command('list', 'list available scripts you can use')
+const child_process = require('child_process')
 
+const chalk = require('chalk')
 
-program.parse(process.argv)
+var childProcess = child_process.fork(path.join(__dirname, '../src/structure/index.js'), process.argv.slice(2), {
+  execArgv: []
+})
+
+process.on('SIGINT', end)
+
+process.on('SIGTERM', end)
+
+function end() {
+  if(childProcess) {
+    childProcess.kill('SIGKILL')
+    childProcess = null
+  }
+
+  console.log(chalk.yellow(`
+
+Easy-Cli ended, Bye Bye
+`));
+}

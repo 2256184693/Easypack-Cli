@@ -1,6 +1,6 @@
 /**
  * log.js
- * 
+ *
  * Created By SH
  */
 
@@ -15,8 +15,9 @@ const iconMap = {
   'error'   : '✘',
   'warn'    : '⚠',
   'success' : '✔',
-  'detail'  : '❄'
-};
+  'detail'  : '❄',
+  'log'     : '',
+}
 
 module.exports = {
   namespace: function(name) {
@@ -24,9 +25,9 @@ module.exports = {
     log.__namespace = name
     return log
   },
-  printMessage: function(messageType, color, ignoreNamespace, message) {
-    const grep = program.grep;
-    let time = '';
+  print: function(messageType, color, ignoreNamespace, message) {
+    const grep = program.grep
+    let time = ''
     if(arguments.length === 3) {
       message = ignoreNamespace
       ignoreNamespace = false
@@ -45,10 +46,29 @@ module.exports = {
     }
 
     if(!grep || message.indexOf(grep) !== -1 || grep === group) {
-      console.log( time + ' ' + chalk.blue(iconMap[messageType]) + ' ' +  chalk[color](message));
+      console.log( time + ' ' + chalk.blue(iconMap[messageType]) + ' ' +  chalk[color](message))
     }
   },
-  info: function() {
-    this.printMessage('info', 'blue', arguments);
+  log: function(message, color = 'green') {
+    this.print('log', color, message)
   },
+  info: function() {
+    this.print('info', 'blue', arguments)
+  },
+  warn: function() {
+    this.print('warn', 'yellow', arguments)
+  },
+  error: function(err) {
+    var errType = Object.prototype.toString.call(err);
+
+    if(errType === '[object Error]') {
+      this.print('error', 'red', err.message)
+      if(program.detail) {
+        this.print('error', 'red', true, err.stack)
+      }
+    }else {
+      this.print('eror', 'red', arguments)
+    }
+    this.print('error')
+  }
 }

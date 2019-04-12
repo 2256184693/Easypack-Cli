@@ -1,6 +1,6 @@
 /**
  * global settings
- * 
+ *
  * Created By SH
  */
 
@@ -19,6 +19,8 @@ var __easy__ = {
   root: path.join(__dirname, '../../'),
   // 工作目录
   cwd: process.cwd(),
+  // memory-fs
+  fs: null,
 }
 
 global.__easy__ = __easy__

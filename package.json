@@ -4,7 +4,7 @@
   "description": "基于Webpack的项目打包、编译工具",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./test/index.js"
   },
   "bin": {
     "easy": "./bin/index.js"
@@ -16,7 +16,11 @@
   "author": "SH",
   "license": "ISC",
   "dependencies": {
+    "autoprefixer": "^9.5.1",
     "chalk": "^2.4.2",
-    "commander": "^2.20.0"
+    "commander": "^2.20.0",
+    "express": "^4.16.4",
+    "fs-extra": "^7.0.1",
+    "inquirer": "^6.2.2"
   }
 }

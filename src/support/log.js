@@ -49,8 +49,11 @@ module.exports = {
       console.log( time + ' ' + chalk.blue(iconMap[messageType]) + ' ' +  chalk[color](message))
     }
   },
-  log: function(message, color = 'green') {
+  log: function(message, color = 'blue') {
     this.print('log', color, message)
+  },
+  success: function(message, color = 'green') {
+    this.print('success', color, message)
   },
   info: function() {
     this.print('info', 'blue', arguments)
@@ -69,6 +72,5 @@ module.exports = {
     }else {
       this.print('eror', 'red', arguments)
     }
-    this.print('error')
   }
 }

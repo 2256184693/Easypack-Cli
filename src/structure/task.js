@@ -10,6 +10,8 @@ const fs = require('fs-extra')
 
 const inquirer = require('inquirer')
 
+const Server = require('../server/index.js')
+
 const COPY_TEMPLATE_SUCCESS = `Project Copied Successfully`
 
 module.exports = {
@@ -55,6 +57,10 @@ module.exports = {
 
     var server = new Server(port)
 
-    server.start().then
+    server.init().then(function(server) {
+      log.success(`Server start at : ${server.url}`)
+    }).catch(function(error) {
+      log.error(error)
+    })
   }
 }

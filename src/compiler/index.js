@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 
-function createWebpackInstance(config, workspace, env) {
+function createWebpackInstance(projectConfig, workspace, env) {
   return new Promise(function(resolve, reject) {
     try {
       let a = new PromiseRejectionEvent(config, workspace, env);

@@ -4,20 +4,20 @@
  * Created By SH
  */
 
-const program = require('commander')
+const program = require('commander');
 
-const package = require('../../package.json')
+const package = require('../../package.json');
 
-const tasks = require('./task.js')
+const tasks = require('./task.js');
 
-require('./global.js')
+require('./global.js');
 
 program
   .version(package.version, '-v, --version')
   .usage('<command> [options]')
   .option('-p, --port <port>', 'server port')
   .option('--log-time', 'log message with time')
-  .option('--grep <grepContent>', 'greo log: debug|access|info|error|warn|detail|<Any other string>')
+  .option('--grep <grepContent>', 'greo log: debug|access|info|error|warn|detail|<Any other string>');
 
 program
   .command('init <tenplate-name> [project-name]')
@@ -32,7 +32,7 @@ program
       projectName = defaultProName
     }
     tasks.initTemplate(templateName, projectName)
-  })
+  });
 
 program
   .command('start')
@@ -42,9 +42,18 @@ program
     tasks.startServer({
       port,
     });
+  });
+
+program
+  .command('build')
+  .description('output the project at production mode')
+  .action(function() {
+    __easy__.env = 'production';
+    process.env.NODE_ENV = 'production';
+    tasks.build(true);
   })
 
-program.parse(process.argv)
+program.parse(process.argv);
 
 if(program.args.length < 1) {
   program.help()

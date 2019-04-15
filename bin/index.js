@@ -6,7 +6,7 @@ const child_process = require('child_process')
 
 const chalk = require('chalk')
 
-var childProcess = child_process.fork(path.join(__dirname, '../src/structure/index.js'), process.argv.slice(2), {
+var childProcess = child_process.fork(path.join(__dirname, '../src/structure/command.js'), process.argv.slice(2), {
   execArgv: []
 })
 

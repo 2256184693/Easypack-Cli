@@ -46,7 +46,7 @@ module.exports = {
     }
 
     if(!grep || message.indexOf(grep) !== -1 || grep === group) {
-      console.log( time + ' ' + chalk.blue(iconMap[messageType]) + ' ' +  chalk[color](message))
+      console.log( time + ' ' + chalk[color](iconMap[messageType]) + ' ' +  chalk[color](message))
     }
   },
   log: function(message, color = 'blue') {
@@ -70,7 +70,7 @@ module.exports = {
         this.print('error', 'red', true, err.stack)
       }
     }else {
-      this.print('eror', 'red', arguments)
+      this.print('error', 'red', arguments)
     }
   }
 }

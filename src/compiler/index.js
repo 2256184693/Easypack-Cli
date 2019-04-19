@@ -1,4 +1,4 @@
-const webpack = require('webpack');
+// const webpack = require('webpack');
 
 function createWebpackInstance(projectConfig, workspace, env) {
   return new Promise(function(resolve, reject) {

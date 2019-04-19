@@ -24,24 +24,27 @@ program
   .description('init a new project from template')
   .action(function(templateName, projectName) {
     if(!templateName) {
-      log.error('The template name must be set.')
+      log.error('The template name must be set.');
       return
     }else if(!projectName) {
-      var defaultProName = 'demo-template'
-      log.warn(`The template name is not set, use the default name  "${defaultProName}".`)
-      projectName = defaultProName
+      var defaultProName = 'demo-template';
+      log.warn(`The template name is not set, use the default name  "${defaultProName}".`);
+      projectName = defaultProName;
     }
-    tasks.initTemplate(templateName, projectName)
+    tasks.initTemplate(templateName, projectName);
   });
 
 program
   .command('start')
   .description('create a webpack server to run project')
   .action(function() {
-    var port = program.port || 9000
-    tasks.startServer({
-      port,
-    });
+    var port = program.port || 9000;
+    var config = require('./config.js');
+    if(config.init()) {
+      tasks.startServer({
+        port,
+      });
+    }
   });
 
 program
@@ -56,5 +59,5 @@ program
 program.parse(process.argv);
 
 if(program.args.length < 1) {
-  program.help()
+  program.help();
 }

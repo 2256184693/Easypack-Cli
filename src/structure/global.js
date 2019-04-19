@@ -13,6 +13,7 @@ const path = require('path')
 const log = require('../support/log.js')
 
 var __easy__ = {
+  configName: 'easy.webpack.js',
   // 全局模块根目录
   globalRoot: child_process.execSync('npm root -g').toString().trim(),
   // cli的根目录

@@ -1,8 +1,12 @@
 
 var path = require("path");
 var HappyPack = require('happypack');
+var os = require("os");
 var happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+
+function resolve (dir) {
+  return path.join(__dirname, './', dir)
+}
 
 module.exports = {
   entry: {
@@ -55,10 +59,6 @@ module.exports = {
     ]
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'src/index.html'
-    }),
     // 多线程加速打包速度
     new HappyPack({
       id: "babel",

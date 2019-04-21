@@ -31,13 +31,14 @@ module.exports = {
 };
 
 function load() {
-  let config = _.merge({}, DEFAULT_CONFIG, loadConfig());
+  let config = _.merge({}, DEFAULT_CONFIG, getConfig());
   if(config) {
-
+    console.log(config);
+    CONFIGS.__default = config;
   }
 }
 // 加载项目配置
-function loadConfig() {
+function getConfig() {
   let cwd = process.cwd();
   let root = path.parse(cwd).root;
   let config, configPath;

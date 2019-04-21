@@ -27,12 +27,13 @@ Server.prototype.init = function() {
   let app = this.app;
   let _this = this;
 
-
-
+  console.log(`请求端口${port}`);
   return detect(port)
     .then(_port => {
-      if(port !== port) {
-        log.error(`端口${port}已被占用，请选择其他端口`);
+      console.log(`获取端口${_port}`);
+      if(port != port) {
+        throw new Error(`端口${port}已被占用，请选择其他端口`);
+        return;
       }
       app.use(favicon(path.join(__dirname, './images/favicon.ico')));
 

@@ -27,13 +27,15 @@ module.exports = {
       return false;
     }
     return true;
-  }
+  },
+  getProjectConfig() {
+    return CONFIGS.__default;
+  },
 };
 
 function load() {
   let config = _.merge({}, DEFAULT_CONFIG, getConfig());
   if(config) {
-    console.log(config);
     CONFIGS.__default = config;
   }
 }

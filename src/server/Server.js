@@ -13,6 +13,8 @@ const path = require('path');
 
 const chalk = require('chalk');
 
+const WebpackConfig = require('../structure/config.js');
+
 const webpack = require('../compiler/index.js');
 
 function Server(opt) {
@@ -27,10 +29,10 @@ Server.prototype.init = function() {
   let app = this.app;
   let _this = this;
 
-  console.log(`请求端口${port}`);
+  let projectConfig = WebpackConfig.getProjectConfig();
+
   return detect(port)
     .then(_port => {
-      console.log(`获取端口${_port}`);
       if(port != port) {
         throw new Error(`端口${port}已被占用，请选择其他端口`);
         return;
@@ -39,7 +41,7 @@ Server.prototype.init = function() {
 
       _this.server = require('http').createServer(app).listen(_this.port);
 
-      return webpack.createWebpackInstance(projectConfig, workspace, 'dev');
+      return webpack.createWebpackInstance(projectConfig, __easy__.cwd, 'dev');
     }).then((data) => {
       return new Promise(_this.initEvents.bind(_this)).then(data => {
         return data;

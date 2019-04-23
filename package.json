@@ -26,6 +26,7 @@
     "inquirer": "^6.2.2",
     "lodash": "^4.17.11",
     "memory-fs": "^0.4.1",
-    "serve-favicon": "^2.5.0"
+    "serve-favicon": "^2.5.0",
+    "webpack": "^4.30.0"
   }
 }

@@ -2,10 +2,10 @@ const webpack = require('webpack');
 
 const EasyProjectPack = require('./webpack/config/project.js');
 
-function createWebpackInstance(projectConfig, workspace, env) {
+function createWebpackInstance(easyConfig, workspace, env) {
   return new Promise(function(resolve, reject) {
     try {
-      let project = new EasyProjectPack(projectConfig, workspace, env);
+      let project = new EasyProjectPack(easyConfig, workspace, env);
       let webpackConfig = project.getConfig();
       let compiler = webpack(webpackConfig);
       if(__easy__.fs) {

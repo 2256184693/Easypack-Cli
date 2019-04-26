@@ -18,8 +18,9 @@
   "rules": {
     "indent": [2, 2, { "SwitchCase": 1 }],
     "linebreak-style": [1, "unix"],
-    "semi": [0, "always"],
+    "semi": [2, "always"],
     "no-console": 0,
-    "rest-spread-spacing": [2, "never"]
+    "rest-spread-spacing": [2, "never"],
+    "space-before-function-paren": [0]
   }
 }

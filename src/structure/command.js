@@ -3,14 +3,13 @@
  *
  * Created By SH
  */
+require('./global.js');
 
 const program = require('commander');
 
 const package = require('../../package.json');
 
 const tasks = require('./task.js');
-
-require('./global.js');
 
 program
   .version(package.version, '-v, --version')
@@ -38,9 +37,9 @@ program
   .command('start')
   .description('create a webpack server to run project')
   .action(function() {
-    var port = program.port || 9000;
     var config = require('./config.js');
     if(config.init()) {
+      var port = program.port || 9000;
       tasks.startServer({
         port,
       });

@@ -4,6 +4,16 @@
  * Created By SH
  */
 
-class Project extends Base {
+var ConfigFactory = require('./base.js');
 
+class Project extends ConfigFactory {
+  constructor(easyConfig, workspace, env) {
+    super(easyConfig, workspace, env);
+  }
+
+  getConfig() {
+    return this.config;
+  }
 }
+
+module.exports = Project;

@@ -1,5 +1,5 @@
 /**
- * load configurations in target project
+ * load easypack configurations in target project
  *
  * Created By SH
  */
@@ -20,7 +20,7 @@ module.exports = {
   init: function(force) {
     if(!isLoad || force) {
       isLoad = true;
-      load();
+      loadConfig();
     }
     if(_.isEmpty(CONFIGS)) {
       log.error(`cannot load the file: "${__easy__.configName}" at ${__easy__.cwd}`);
@@ -28,48 +28,48 @@ module.exports = {
     }
     return true;
   },
-  getProjectConfig() {
+  getEasyConfig: function() {
     return CONFIGS.__default;
   },
 };
 
-function load() {
+function loadConfig() {
   let config = _.merge({}, DEFAULT_CONFIG, getConfig());
   if(config) {
     CONFIGS.__default = config;
   }
-}
-// 加载项目配置
-function getConfig() {
-  let cwd = process.cwd();
-  let root = path.parse(cwd).root;
-  let config, configPath;
-  try {
-    configPath = getConfigPath(cwd, root);
-    if(configPath) {
-      config = require(configPath);
+  // 加载项目配置
+  function getConfig() {
+    let cwd = process.cwd();
+    let root = path.parse(cwd).root;
+    let config, configPath;
+    try {
+      configPath = getConfigPath(cwd, root);
+      if(configPath) {
+        config = require(configPath);
+      }
+    } catch (e) {
+      log.error(`load the config file error at ${cwd}`);
+      log.error(e.toString());
     }
-  } catch (e) {
-    log.error(`load the config file error at ${cwd}`);
-    log.error(e);
-  }
-  return config;
-};
+    return config;
+  };
 
-/**
- * @description 获取项目中的配置路径
- *
- * @param {p} 当前路径
- * @param {root} 根路径
- */
-function getConfigPath (p, root) {
-  if(p === root) {
-    return undefined;
-  }
-  var configPath = path.join(p, './', __easy__.configName);
-  if(fs.existsSync(configPath)) {
-    return configPath;
-  }else {
-    return getConfigPath(path.join(p, '../'), root);
+  /**
+   * @description 获取项目中的配置路径
+   *
+   * @param {p} 当前路径
+   * @param {root} 根路径
+   */
+  function getConfigPath (p, root) {
+    if(p === root) {
+      return;
+    }
+    var configPath = path.join(p, './' + __easy__.configName);
+    if(fs.existsSync(configPath)) {
+      return configPath;
+    }else {
+      return getConfigPath(path.join(p, '../'), root);
+    }
   }
 }

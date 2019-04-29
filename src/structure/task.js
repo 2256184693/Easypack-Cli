@@ -51,7 +51,7 @@ module.exports = {
   startServer: function(opt) {
     const port = opt ? (opt.port || 9000) : 9000;
 
-    log.info(`create a local webpack server at ${__easy__.cwd}`);
+    log.info(`EasyPack is working at ${__easy__.cwd}`);
 
     process.env.NODE_ENV = 'development';
 
@@ -65,7 +65,7 @@ module.exports = {
     server.init().then(function(server) {
       log.success(`Server start at : ${server.url}:${server.port}`)
     }).catch(function(error) {
-      log.error(error)
+      console.log(`Server错误: ${error}`);
     });
   },
   build: function(minify) {

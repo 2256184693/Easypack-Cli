@@ -13,9 +13,19 @@ const path = require('path');
 
 const chalk = require('chalk');
 
-const WebpackConfig = require('../structure/config.js');
+const config = require('../structure/config.js');
 
 const webpack = require('../compiler/index.js');
+
+const webpackDevMiddleware = require('webpack-dev-middleware');
+
+const webpackHotMiddleware = require('webpack-hot-middleware');
+
+const fileExplorerMiddleware = require('./middlewares/file-system.js');
+
+const errorMiddleware = require('./middlewares/error.js');
+
+const open = require('open');
 
 class Server {
   constructor(opt) {
@@ -29,19 +39,61 @@ class Server {
     let _this = this;
     let app = this.app;
     let port = this.port;
-    let easyConfig = WebpackConfig.getEasyConfig();
+    let easyConfig = config.getEasyConfig();
     return detect(port)
       .then(_port => {
         if (port != port) {
-          throw new Error(`端口${port}已被占用，请选择其他端口`);
-          return;
+          throw new Error(`${port}端口已被占用，请选择其他端口`);
+        }else {
+          app.use(favicon(path.join(__dirname, './images/favicon.ico')));
+
+          return webpack.createWebpackInstance(easyConfig.config, __easy__.cwd, 'dev');
         }
-        app.use(favicon(path.join(__dirname, './images/favicon.ico')));
+      }).then((data) => {
+        const compiler = data.compiler;
+
+        const webpackConfig = data.config;
+
+        // console.log(webpackConfig);
+
+        const publicPath = webpackConfig.output.publicPath || '/';
+
+        // webpack-dev-middleware
+        app.use(webpackDevMiddleware(compiler, {
+          publicPath,
+          stats: {
+            colors: true,
+          },
+          watchOptions: webpackConfig.watchOptions
+        }));
+
+        // webpack-hot-middleware
+        app.use(webpackHotMiddleware(compiler, {
+          log: () => {},
+          path: '__webpack_hmr'
+        }));
+
+        // 文件管理系统
+        app.use(fileExplorerMiddleware);
+        // 错误处理
+        app.use(errorMiddleware);
 
         _this.server = require('http').createServer(app).listen(_this.port);
-        return webpack.createWebpackInstance(easyConfig, __easy__.cwd, 'dev');
-      }).then((data) => {
+
         return new Promise(_this._initEvents.bind(_this)).then(data => {
+          // 是否需要在浏览器打开页面
+          let openBrowser = easyConfig.config.openBrowser;
+          if(openBrowser) {
+            if(typeof openBrowser === 'string') {
+              if(openBrowser.match(/^https?:\/\//)) {
+                open(openBrowser);
+              }else {
+                open(data.url + openBrowser);
+              }
+            }else if(typeof openBrowser === 'boolean') {
+              log.success('模拟打开输出的第一个html');
+            }
+          }
           return data;
         });
       });

@@ -11,10 +11,13 @@ const package = require('../../package.json');
 
 const tasks = require('./task.js');
 
+const path = require('path');
+
 program
   .version(package.version, '-v, --version')
   .usage('<command> [options]')
   .option('-p, --port <port>', 'server port')
+  .option('-q, --quiet', 'webpack compile quietly')
   .option('--log-time', 'log message with time')
   .option('--grep <grepContent>', 'greo log: debug|access|info|error|warn|detail|<Any other string>');
 
@@ -37,9 +40,11 @@ program
   .command('start')
   .description('create a webpack server to run project')
   .action(function() {
+    module.paths.push(path.join(__dirname, '../../node_modules'));
     var config = require('./config.js');
     if(config.init()) {
       var port = program.port || 9000;
+
       tasks.startServer({
         port,
       });

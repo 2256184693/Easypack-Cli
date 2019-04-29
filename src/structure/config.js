@@ -14,7 +14,11 @@ var isLoad = false;
 
 var CONFIGS = {};
 
-var DEFAULT_CONFIG = {};
+var DEFAULT_CONFIG = {
+  minify : true,  //是否最压缩
+  commonPack : true, // 是否加入 公共包,
+  optimizeCss : true //优化CSS
+};
 
 module.exports = {
   init: function(force) {
@@ -34,42 +38,50 @@ module.exports = {
 };
 
 function loadConfig() {
-  let config = _.merge({}, DEFAULT_CONFIG, getConfig());
-  if(config) {
-    CONFIGS.__default = config;
+  let cwd = process.cwd();
+  let EasyConfig = getConfig(cwd);
+  if(EasyConfig) {
+    let config = _.merge({}, DEFAULT_CONFIG, EasyConfig);
+    if(config) {
+      CONFIGS.__default = {
+        config,
+      };
+      return true;
+    }
   }
-  // 加载项目配置
-  function getConfig() {
-    let cwd = process.cwd();
-    let root = path.parse(cwd).root;
-    let config, configPath;
-    try {
-      configPath = getConfigPath(cwd, root);
-      if(configPath) {
-        config = require(configPath);
+  return false;
+}
+
+// 加载项目配置
+function getConfig(dir) {
+  let root = path.parse(dir).root;
+  let config;
+  try {
+    let configPath = getConfigPath(dir, root);
+    if(configPath) {
+      let configDir = path.parse(configPath).dir;
+      if (configDir != __easy__.cwd) {
+        process.chdir(configDir);
+        __easy__.cwd = configDir;
       }
-    } catch (e) {
-      log.error(`load the config file error at ${cwd}`);
-      log.error(e.toString());
+      config = require(configPath);
     }
     return config;
-  };
+  } catch (e) {
+    log.error(`load easy.webpack.js error at ${cwd}`);
+    console.log('error:', e);
+  }
+};
 
-  /**
-   * @description 获取项目中的配置路径
-   *
-   * @param {p} 当前路径
-   * @param {root} 根路径
-   */
-  function getConfigPath (p, root) {
-    if(p === root) {
-      return;
-    }
-    var configPath = path.join(p, './' + __easy__.configName);
-    if(fs.existsSync(configPath)) {
-      return configPath;
-    }else {
-      return getConfigPath(path.join(p, '../'), root);
-    }
+function getConfigPath(p, root) {
+  if (p === root) {
+    return
+  }
+  var configPath =  path.join(p, "./easy.webpack.js");
+
+  if (fs.existsSync(configPath)) {
+    return configPath;
+  } else {
+    return getConfigPath(path.join(p, '../'), root);
   }
 }

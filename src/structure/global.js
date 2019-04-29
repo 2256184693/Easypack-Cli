@@ -4,13 +4,13 @@
  * Created By SH
  */
 
-// const program = require('commander')
+const program = require('commander');
 
-const child_process = require('child_process')
+const child_process = require('child_process');
 
-const path = require('path')
+const path = require('path');
 
-const log = require('../support/log.js')
+const log = require('../support/log.js');
 
 var __easy__ = {
   configName: 'easy.webpack.js',
@@ -22,9 +22,14 @@ var __easy__ = {
   cwd: process.cwd(),
   // memory-fs
   fs: null,
-}
+};
 
-global.__easy__ = __easy__
-global.log = log
+global.log = log;
 
-module.exports = __easy__
+global.program = program;
+
+global.__easy__ = __easy__;
+
+global.serverLog = log.namespace('Server');
+
+module.exports = __easy__;

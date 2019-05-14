@@ -4,6 +4,8 @@
  * Created By SH
  */
 
+const path = require('path');
+
 var ConfigFactory = require('./base.js');
 
 class Project extends ConfigFactory {

@@ -65,7 +65,8 @@ module.exports = {
     server.init().then(function(server) {
       log.success(`Server start at : ${server.url}:${server.port}`)
     }).catch(function(error) {
-      console.log(`Server错误: ${error}`);
+      log.error(`Server Error: ${error}`);
+      console.log(error);
     });
   },
   build: function(minify) {

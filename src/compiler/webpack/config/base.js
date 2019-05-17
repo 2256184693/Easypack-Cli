@@ -4,6 +4,8 @@
  * @author SH
  */
 
+const path = require('path');
+
 let DEFAULT_KEYS = [
   'amd', 'bail', 'cache', 'loader', 'parallelism', 'profile', 'recordsPath', 'recordsInputPath', 'recordsOutputPath', 'context',
   'entry', 'output', 'module', 'resolve', 'resolveLoader', 'plugins', 'devServer', 'devtool', 'targets', 'watch',
@@ -15,10 +17,14 @@ class ConfigFactory {
     this.easyConfig = easyConfig;
     this.workspace = workspace;
     this.env = env;
-    this.config = this._merge(easyConfig, workspace);
+    this.config = this._resolve(easyConfig, workspace);
   }
 
-  _merge(easyConfig, workspace) {
+  _isDev() {
+    return this.env === 'dev';
+  }
+
+  _resolve(easyConfig, workspace) {
     let config = this._getDefaultConfig();
     config.mode = this.env === 'dev' ? 'development' : 'production';
     Object.keys(easyConfig).forEach(key => {
@@ -27,7 +33,10 @@ class ConfigFactory {
       }
     });
     config.context = workspace;
-    // config.plugins = easyConfig.plugins || [];
+    config.plugins = easyConfig.plugins || [];
+    config.module = easyConfig.module || {};
+    config.resolve = easyConfig.resolve || {};
+    config.resolveLoader = easyConfig.resolveLoader || {};
     return config;
   }
 
@@ -42,6 +51,53 @@ class ConfigFactory {
   getConfig() {
     return this.config;
   }
+
+  mergeEnvConfig() {
+    if(this.env === 'dev') {
+      this.mergeDevConfig();
+    }else {
+      this.mergePrdConfig();
+    }
+  }
+
+  mergeDevConfig() {
+
+  }
+
+  mergePrdConfig() {
+
+  }
+
+  setResolve() {
+    var resolve = this.config.resolve;
+    var modules = resolve.modules || [];
+    var rootNodeModules = path.join(__easy__.root, 'node_modules');
+    var proNodeModules = path.join(__easy__.cwd, 'node_modules');
+    modules.splice(0, 0, rootNodeModules);
+    modules.push(proNodeModules);
+    resolve.modules = modules;
+    this.config.resolve = resolve;
+    return this;
+  }
+
+  setResolveLoaders() {
+    var resolve = this.config.resolve;
+    var resolveLoader = this.config.resolveLoader;
+    var modules = resolveLoader.modules || [];
+    var alias = resolveLoader.alias || {};
+    var rootNodeModules = path.join(__easy__.root, 'node_modules');
+    var proNodeModules = path.join(__easy__.cwd, 'node_modules');
+    modules.splice(0, 0, rootNodeModules);
+    modules.push(proNodeModules);
+    alias.sass = 'sass-loader';
+    alias['scss-loader'] = 'sass-loader';
+    alias.scss = 'sas-loader';
+    resolve.modules = modules;
+    resolve.alias = alias;
+    this.config.resolve = resolve;
+    return this;
+  }
+
 }
 
 module.exports = ConfigFactory;

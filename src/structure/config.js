@@ -4,6 +4,8 @@
  * Created By SH
  */
 
+const tools = require('../utils/tools.js');
+
 const _ = require('lodash');
 
 const path = require('path');
@@ -15,9 +17,9 @@ var isLoad = false;
 var CONFIGS = {};
 
 var DEFAULT_CONFIG = {
-  minify : true,  //是否最压缩
-  commonPack : true, // 是否加入 公共包,
-  optimizeCss : true //优化CSS
+  // minify : true,  //是否最压缩
+  // commonPack : true, // 是否加入 公共包,
+  // optimizeCss : true //优化CSS
 };
 
 module.exports = {
@@ -39,15 +41,13 @@ module.exports = {
 
 function loadConfig() {
   let cwd = process.cwd();
-  let EasyConfig = getConfig(cwd);
-  if(EasyConfig) {
-    let config = _.merge({}, DEFAULT_CONFIG, EasyConfig);
-    if(config) {
-      CONFIGS.__default = {
-        config,
-      };
-      return true;
-    }
+  let easyConfig = getConfig(cwd);
+  if(easyConfig) {
+    CONFIGS.__default = {
+      config: _.merge({}, DEFAULT_CONFIG, easyConfig),
+      entryHtml: getEntryHtml(easyConfig),
+    };
+    return true;
   }
   return false;
 }
@@ -84,4 +84,9 @@ function getConfigPath(p, root) {
   } else {
     return getConfigPath(path.join(p, '../'), root);
   }
+}
+
+function getEntryHtml(easyConfig) {
+  let entryHtml = tools.o2a(easyConfig.entryHtml);
+  return entryHtml;
 }

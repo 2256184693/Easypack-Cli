@@ -25,14 +25,17 @@ const fileExplorerMiddleware = require('./middlewares/file-system.js');
 
 const errorMiddleware = require('./middlewares/error.js');
 
+const serverSourceMiddleware = require('./middlewares/server-source.js');
+
 const open = require('open');
 
 class Server {
   constructor(opt) {
     this.app = express();
     this.port = opt.port;
-    this.url = `http://127.0.0.1`;
+    this.host = `http://127.0.0.1`;
     this.server = null;
+    this.url = `${this.host}:${this.port}`;
   }
 
   init() {
@@ -46,6 +49,8 @@ class Server {
           throw new Error(`${port}端口已被占用，请选择其他端口`);
         }else {
           app.use(favicon(path.join(__dirname, './images/favicon.ico')));
+
+          app.use('/__easy__/', serverSourceMiddleware);
 
           return webpack.createWebpackInstance(easyConfig.config, __easy__.cwd, 'dev');
         }
@@ -70,7 +75,6 @@ class Server {
         // webpack-hot-middleware
         app.use(webpackHotMiddleware(compiler, {
           log: () => {},
-          path: '__webpack_hmr'
         }));
 
         // 文件管理系统
@@ -90,8 +94,11 @@ class Server {
               }else {
                 open(data.url + openBrowser);
               }
-            }else if(typeof openBrowser === 'boolean') {
-              log.success('模拟打开输出的第一个html');
+            }else {
+              var entryHtml = easyConfig.entryHtml;
+              if(entryHtml && entryHtml[0] && entryHtml[0].filename) {
+                open(data.url + path.join(publicPath, entryHtml[0].filename));
+              }
             }
           }
           return data;

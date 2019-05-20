@@ -40,11 +40,10 @@ program
   .command('start')
   .description('create a webpack server to run project')
   .action(function() {
-    module.paths.push(path.join(__dirname, '../../node_modules'));
+    process.env.NODE_ENV = 'development';
     var config = require('./config.js');
     if(config.init()) {
       var port = program.port || 9000;
-
       tasks.startServer({
         port,
       });
@@ -55,9 +54,11 @@ program
   .command('build')
   .description('output the project at production mode')
   .action(function() {
-    __easy__.env = 'production';
     process.env.NODE_ENV = 'production';
-    tasks.build(true);
+    var config = require('./config.js');
+    if(config.init()) {
+      tasks.build(true);
+    }
   })
 
 program.parse(process.argv);

@@ -24,6 +24,10 @@ class ConfigFactory {
     return this.env === 'dev';
   }
 
+  _isPrd() {
+    return this.env === 'prd';
+  }
+
   _resolve(easyConfig, workspace) {
     let config = this._getDefaultConfig();
     config.mode = this.env === 'dev' ? 'development' : 'production';

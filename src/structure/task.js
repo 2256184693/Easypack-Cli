@@ -12,6 +12,8 @@ const inquirer = require('inquirer');
 
 const Server = require('../server/Server.js');
 
+const pack = require('../compiler/build.js');
+
 const COPY_TEMPLATE_SUCCESS = `Project Copied Successfully`;
 
 module.exports = {
@@ -49,19 +51,12 @@ module.exports = {
     })
   },
   startServer: function(opt) {
-    const port = opt ? (opt.port || 9000) : 9000;
-
     log.info(`EasyPack is working at ${__easy__.cwd}`);
 
-    process.env.NODE_ENV = 'development';
-
+    const port = opt ? (opt.port || 9000) : 9000;
     var MemoryFileSystem = require("memory-fs");
-
     __easy__.fs = new MemoryFileSystem();
-
     var server = new Server({ port });
-
-
     server.init().then(function(server) {
       log.success(`Server start at : ${server.url}:${server.port}`)
     }).catch(function(error) {
@@ -70,6 +65,8 @@ module.exports = {
     });
   },
   build: function(minify) {
+    log.info(`EasyPack is working at ${__easy__.cwd}`);
 
+    pack(minify);
   }
 }

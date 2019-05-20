@@ -15,7 +15,7 @@ const chalk = require('chalk');
 
 const config = require('../structure/config.js');
 
-const webpack = require('../compiler/index.js');
+const webpack = require('../compiler/webpack.js');
 
 const webpackDevMiddleware = require('webpack-dev-middleware');
 

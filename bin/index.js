@@ -10,9 +10,9 @@ var spliter = path.delimiter;
 
 var NODE_PATH = process.env.NODE_PATH;
 
-var targetPath = [ path.join(__dirname, "../node_modules") ].join(spliter) + (NODE_PATH ? spliter + NODE_PATH : '');
+var node_path = [ path.join(__dirname, "../node_modules") ].join(spliter) + (NODE_PATH ? spliter + NODE_PATH : '');
 
-process.env.NODE_PATH = targetPath;
+process.env.NODE_PATH = node_path;
 
 var childProcess = child_process.fork(path.join(__dirname, '../src/structure/command.js'), process.argv.slice(2), {
   execArgv: []
@@ -29,7 +29,6 @@ function end() {
   }
 
   console.log(chalk.yellow(`
-
 Easy-Cli ended, Bye Bye
 `));
 }

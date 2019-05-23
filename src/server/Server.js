@@ -59,8 +59,6 @@ class Server {
 
         const webpackConfig = data.config;
 
-        // console.log(webpackConfig);
-
         const publicPath = webpackConfig.output.publicPath || '/';
 
         // webpack-dev-middleware

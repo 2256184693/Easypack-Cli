@@ -5,10 +5,15 @@ export default {
     analyzerMode: 'static',
     reportFilename: 'report.html'
   }],
-  optimizeCss: [true, false, {
-    //optimize-css-assets-webpack-plugin
-  }],
+  optimizeCss: [true, false, { 'optimize-css-assets-webpack-plugins': {} }],
   cssLoader: {
     extensions: ['.css', '.scss', '.sass', '.less', 'stylus'],
+    happypack: [true, false],
+    vue: [true, false],
+    sass: {},
+    scss: {},
+    less: {},
+    postcss: {},
+    stylus: {},
   }
 }

@@ -58,10 +58,9 @@ module.exports = {
     __easy__.fs = new MemoryFileSystem();
     var server = new Server({ port });
     server.init().then(function(server) {
-      log.success(`Server start at : ${server.url}:${server.port}`)
+      log.success(`Server start at : ${server.url}`)
     }).catch(function(error) {
       log.error(`Server Error: ${error}`);
-      console.log(error);
     });
   },
   build: function(minify) {

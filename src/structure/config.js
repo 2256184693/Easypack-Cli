@@ -68,7 +68,7 @@ function getConfig(dir) {
     }
     return config;
   } catch (e) {
-    log.error(`load easy.webpack.js error at ${cwd}`);
+    log.error(`load easy.webpack.js error at ${__easy__.cwd}`);
     console.log('error:', e);
   }
 };

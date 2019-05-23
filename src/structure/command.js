@@ -11,8 +11,6 @@ const package = require('../../package.json');
 
 const tasks = require('./task.js');
 
-const path = require('path');
-
 program
   .version(package.version, '-v, --version')
   .usage('<command> [options]')

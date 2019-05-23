@@ -73,32 +73,24 @@ class ConfigFactory {
   }
 
   setResolve() {
-    var resolve = this.config.resolve;
-    var modules = resolve.modules || [];
-    var rootNodeModules = path.join(__easy__.root, 'node_modules');
-    var proNodeModules = path.join(__easy__.cwd, 'node_modules');
-    modules.splice(0, 0, rootNodeModules);
-    modules.push(proNodeModules);
-    resolve.modules = modules;
-    this.config.resolve = resolve;
+    var modules = this.config.resolve.modules || [];
+    var easyPath = path.join(__easy__.root, 'node_modules');
+    var projectPath = path.join(__easy__.cwd, 'node_modules');
+    this.config.resolve.modules = [ projectPath, ...modules, easyPath ];
     return this;
   }
 
   setResolveLoaders() {
-    var resolve = this.config.resolve;
-    var resolveLoader = this.config.resolveLoader;
-    var modules = resolveLoader.modules || [];
-    var alias = resolveLoader.alias || {};
-    var rootNodeModules = path.join(__easy__.root, 'node_modules');
-    var proNodeModules = path.join(__easy__.cwd, 'node_modules');
-    modules.splice(0, 0, rootNodeModules);
-    modules.push(proNodeModules);
+    var modules = this.config.resolveLoader.modules || [];
+    var easyPath = path.join(__easy__.root, 'node_modules');
+    var projectPath = path.join(__easy__.cwd, 'node_modules');
+    this.config.resolveLoader.modules = [projectPath, ...modules, easyPath ];
+
+    var alias = this.config.resolveLoader.alias || {};
     alias.sass = 'sass-loader';
     alias['scss-loader'] = 'sass-loader';
-    alias.scss = 'sas-loader';
-    resolve.modules = modules;
-    resolve.alias = alias;
-    this.config.resolve = resolve;
+    alias.scss = 'sass-loader';
+    this.config.resolveLoader.alias = alias;
     return this;
   }
 

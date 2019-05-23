@@ -18,7 +18,7 @@ const _prdDefault = require('./env/prd.js');
 
 const _devDefault = require('./env/dev.js');
 
-const loaders = require('../utils/cssLoader.js');
+const createCssLoader = require('../utils/cssLoader.js');
 
 class Project extends ConfigFactory {
   constructor(easyConfig, workspace, env) {
@@ -26,6 +26,8 @@ class Project extends ConfigFactory {
     this.setEntry();
     this.mergeEnvConfig();
     this._init();
+
+    console.log('log=>6', JSON.parse(JSON.stringify(this.config.resolve.modules)));
   }
 
   getConfig() {
@@ -64,16 +66,16 @@ class Project extends ConfigFactory {
   _init() {
     this.setResolve();
     this.setResolveLoaders();
-    this.setCssLoaders();
+    // this.setCssLoaders();
     this.setPlugins();
     this.setEntryHtml();
   }
 
   setCssLoaders() {
     var rules = this.config.module.rules || [];
-    var opt = this.easyConfig.cssLoader;
+    var opt = this.easyConfig.cssLoader || {};
 
-    var loaders = loaders.createCssLoader(opt, this.env);
+    var loaders = createCssLoader(opt, this.env);
 
     this.config.module.rules = rules.concat(loaders);
     return this;

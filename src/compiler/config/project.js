@@ -26,8 +26,6 @@ class Project extends ConfigFactory {
     this.setEntry();
     this.mergeEnvConfig();
     this._init();
-
-    console.log('log=>6', JSON.parse(JSON.stringify(this.config.resolve.modules)));
   }
 
   getConfig() {
@@ -66,7 +64,7 @@ class Project extends ConfigFactory {
   _init() {
     this.setResolve();
     this.setResolveLoaders();
-    // this.setCssLoaders();
+    this.setCssLoaders();
     this.setPlugins();
     this.setEntryHtml();
   }
@@ -76,7 +74,6 @@ class Project extends ConfigFactory {
     var opt = this.easyConfig.cssLoader || {};
 
     var loaders = createCssLoader(opt, this.env);
-
     this.config.module.rules = rules.concat(loaders);
     return this;
   }

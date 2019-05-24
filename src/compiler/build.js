@@ -7,7 +7,7 @@ module.exports = function (minify) {
   log.info(`EasyPack Build Start`);
   var easyConfig = config.getEasyConfig();
 
-  promise = webpack.createWebpackInstance(easyConfig, __easy__.cwd, 'prd');
+  promise = webpack.createWebpackInstance(easyConfig.config, __easy__.cwd, 'prd');
 
   promise.then(function(data) {
     var compiler = data.compiler;

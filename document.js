@@ -15,5 +15,9 @@ export default {
     less: {},
     postcss: {},
     stylus: {},
+    pack: [true, false, {}],
+    optimize: [true, false, {}],
   }
+  // HashedModuleIds: { HashedModuleIdsPlugin },
+
 }

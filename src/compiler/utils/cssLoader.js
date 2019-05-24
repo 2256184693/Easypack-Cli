@@ -14,7 +14,7 @@ const CSS_LOADER_KEY_MAP = {
 
 const DEFAULT_CONFIG = {
   'dev': {
-    css: { minimize: false },
+    css: {},
     sass: { indentedSyntax: true },
     scss: {},
     less: {},
@@ -45,17 +45,6 @@ function getExtensions(opt) {
   });
 
   return exts;
-}
-
-function getCustomByKey(opt, key) {
-  var data = opt[key];
-  if(_.isPlainObject(data)) {
-    return data;
-  }else if(_.isFunction(data)) {
-    return data(process.env.NODE_ENV);
-  }else {
-    return {};
-  }
 }
 
 function getLoadersMap(opt, defaultConfig, sourceMap) {
@@ -89,7 +78,16 @@ function getLoadersMap(opt, defaultConfig, sourceMap) {
   return map;
 }
 
-module.exports = createCssLoader;
+function getCustomByKey(opt, key) {
+  var data = opt[key];
+  if(_.isPlainObject(data)) {
+    return data;
+  }else if(_.isFunction(data)) {
+    return data(process.env.NODE_ENV);
+  }else {
+    return {};
+  }
+}
 
 function createCssLoader(opt, env) {
   if(!env) {
@@ -122,4 +120,28 @@ function createDevLoaders(opt) {
   return loaders;
 };
 
-function createPrdLoaders(opt) {};
+function createPrdLoaders(opt) {
+  let loaders = [];
+  let exts = getExtensions(opt);
+  let loadersMap = getLoadersMap(opt, DEFAULT_CONFIG.dev, false);
+
+  let fallback = opt.fallback || (opt.vue ? 'vue-style-loader': 'style-loader');
+
+  loaders = exts.map(ext => {
+    let loaderKey = CSS_LOADER_KEY_MAP[ext];
+    let loader = loadersMap[loaderKey];
+    loader.splice(0, 0, fallback);
+    return {
+      test: new RegExp('\\.' + ext + '$'),
+      use: loader
+    };
+  });
+  return loaders;
+};
+
+module.exports = createCssLoader;
+
+module.exports.createHappypackLoaders = function(opt, defaultConfig, sourceMap) {
+  var _opt = Object.assign({}, opt, {happypack: false});
+  return getLoadersMap(_opt, defaultConfig, sourceMap);
+};

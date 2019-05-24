@@ -4,8 +4,6 @@
  * Created By SH
  */
 
-const tools = require('../utils/tools.js');
-
 const _ = require('lodash');
 
 const path = require('path');
@@ -87,6 +85,20 @@ function getConfigPath(p, root) {
 }
 
 function getEntryHtml(easyConfig) {
-  let entryHtml = tools.o2a(easyConfig.entryHtml);
+  let entryHtml = o2a(easyConfig.entryHtml);
   return entryHtml;
+}
+
+
+function o2a(data) {
+  if(Array.isArray(data)) {
+    return data;
+  }else if(data == null) {
+    return data;
+  }else {
+    return Object.keys(data).map(key => ({
+      key,
+      value: data[key]
+    }));
+  }
 }

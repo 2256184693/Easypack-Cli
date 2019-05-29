@@ -20,7 +20,7 @@ module.exports = function (minify) {
           return false;
         }
         var endTime = Date.now();
-        log.info(`EasyPack Build Success, Spend Time: ${endTime - startTime}`);
+        log.success(`EasyPack Build Success, Spend Time: ${endTime - startTime}`);
       });
     }
   }).catch(e => {

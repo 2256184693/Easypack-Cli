@@ -4,7 +4,9 @@ const createCssLoader = require('../../utils/cssLoader.js');
 
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
+// const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
+
+const MinCssExtractPlugin = require('mini-css-extract-plugin');
 
 const OptimizeCssPlugin = require('optimize-css-assets-webpack-plugin');
 
@@ -22,7 +24,7 @@ module.exports = function(workspace, easyConfig) {
           'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
         }
       }),
-      new ExtractTextWebpackPlugin({
+      new MinCssExtractPlugin({
         filename: 'styles/[name].[contenthash].css'
       }),
     ]
@@ -36,7 +38,7 @@ module.exports = function(workspace, easyConfig) {
         filename: 'styles/[name].[contenthash:8].css'
       };
     }
-    config.plugins.push(new ExtractTextWebpackPlugin(cssLoader.pack));
+    config.plugins.push(new MinCssExtractPlugin(cssLoader.pack));
   }
 
   if(cssLoader.optimize){
@@ -69,7 +71,7 @@ module.exports = function(workspace, easyConfig) {
 
   // ExtractTextPlugin
   if(Object.keys(easyConfig.entry).length > 1 && easyConfig.commonPack) {
-    config.plugins[1] = new ExtractTextWebpackPlugin({
+    config.plugins[1] = new MinCssExtractPlugin({
       filename: 'styles/[name].[contenthash].css',
       allChunks: true,
     });

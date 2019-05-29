@@ -9,7 +9,9 @@ const path = require('path');
 let DEFAULT_KEYS = [
   'amd', 'bail', 'cache', 'loader', 'parallelism', 'profile', 'recordsPath', 'recordsInputPath', 'recordsOutputPath', 'context',
   'entry', 'output', 'module', 'resolve', 'resolveLoader', 'plugins', 'devServer', 'devtool', 'targets', 'watch',
-  'watchOptions','externals', 'performance', 'node', 'stats'
+  'watchOptions','externals', 'performance', 'node', 'stats',
+  'mode',
+  'optimization'
 ];
 
 class ConfigFactory {

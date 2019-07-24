@@ -1,39 +1,60 @@
 /**
- * 项目配置类 继承自默认Config类
+ * EasyProject 项目配置类
  *
  * Created By SH
  */
 
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-const webpackMerge = require('webpack-merge');
+const _ = require('lodash');
 
 const path = require('path');
 
-const _ = require('lodash');
-
-const ConfigFactory = require('./base.js');
-
-const _prdDefault = require('./env/prd.js');
-
-const _devDefault = require('./env/dev.js');
+const BaseConfigFactory = require('./base.js');
 
 const createCssLoader = require('../utils/cssLoader.js');
 
-class Project extends ConfigFactory {
+const webpackMerge = require('webpack-merge');
+
+const devConfig = require('./project.dev.js');
+
+const prdConfig = require('./project.prd.js');
+
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+class EasyProject extends BaseConfigFactory {
   constructor(easyConfig, workspace, env) {
     super(easyConfig, workspace, env);
     this.setEntry();
     this.mergeEnvConfig();
-    this._init();
+    this.init();
   }
-
-  getConfig() {
-    return this.config;
+  init() {
+    this.setOutPut();
+    this.setResolve();
+    this.setResolveLoaders();
+    this.setCssLoaders();
+    this.setPlugins();
+    this.setEntryHtml();
   }
-
+  mergeDevConfig() {
+    let customConfig, defaultConfig;
+    if(_.isFunction(this.easyConfig._devConfig)) {
+      customConfig = this.easyConfig._devConfig(this.workspace, this.easyConfig);
+    }
+    defaultConfig = devConfig(this.workspace, this.easyConfig);
+    this.config = webpackMerge(defaultConfig, this.config, customConfig);
+  }
+  mergePrdConfig() {
+    let customConfig, defaultConfig;
+    if(_.isFunction(this.easyConfig._prdConfig)) {
+      customConfig = this.easyConfig._prdConfig(this.workspace, this.easyConfig);
+    }
+    defaultConfig = prdConfig(this.workspace, this.easyConfig);
+    this.config = webpackMerge(defaultConfig, this.config, customConfig);
+  }
   setEntry() {
-    // dev环境增加热更新入口
+    // dev环境增加热更新入口entry
     if(this.env === 'dev') {
       let entry = this.config.entry;
       Object.keys(entry).forEach(entryKey => {
@@ -42,79 +63,53 @@ class Project extends ConfigFactory {
     }
     return this;
   }
-
-  mergeDevConfig() {
-    var customConfig, defaultConfig;
-    if(_.isFunction(this.easyConfig._dev)) {
-      customConfig = this.easyConfig._dev(this.workspace, this.easyConfig);
+  setOutPut() {
+    var output = this.config.output || {};
+    if(!output.path) {
+      this.setOutPutPath();
     }
-    defaultConfig = _devDefault(this.workspace, this.easyConfig);
-    this.config = webpackMerge(defaultConfig, this.config, customConfig);
-  }
-
-  mergePrdConfig() {
-    var customConfig, defaultConfig;
-    if(_.isFunction(this.easyConfig._prd)) {
-      customConfig = this.easyConfig._dev(this.workspace, this.easyConfig);
+    if(!output.filename) {
+      this.setOutPutFileName();
     }
-    defaultConfig = _prdDefault(this.workspace, this.easyConfig);
-    this.config = webpackMerge(defaultConfig, this.config, customConfig);
+    if(!output.publicPath) {
+      this.setOutputPublicPath();
+    }
   }
-
-  _init() {
-    this.setResolve();
-    this.setResolveLoaders();
-    this.setCssLoaders();
-    this.setPlugins();
-    this.setEntryHtml();
-  }
-
   setCssLoaders() {
-    var rules = this.config.module.rules || [];
-    var opt = this.easyConfig.cssLoader || {};
+    let rules = this.config.module.rules || [];
+    let opt = this.easyConfig.cssLoader || {};
+    const loaders = createCssLoader(opt, this.env);
 
-    var loaders = createCssLoader(opt, this.env);
     this.config.module.rules = rules.concat(loaders);
     return this;
   }
-
   setPlugins() {
-
+    let plugins = this.config.plugins;
+    plugins.push(new MiniCssExtractPlugin({
+      filename: this._isDev() ? 'css/[name].css' : 'css/[name].[chunkhash:8].css',
+      chunks: 'all',
+    }));
+    this.config.plugins = plugins;
   }
-
   setEntryHtml() {
-    var easyConfig = this.easyConfig;
-    var plugins = this.config.plugins;
-    var entryHtml = easyConfig.entryHtml;
-    if(entryHtml && entryHtml.length) {
-      var _default_conf = this._isDev() ? {
+    let entryHtmls = this.easyConfig.entryHtml;
+    if(entryHtmls && entryHtmls.length) {
+      let _conf = this._isDev() ? {
         inject: true,
-        chunksSortMode: 'dependency',
       } : {
         inject: true,
-        chunksSortMode: 'dependency',
         minify: {
           minifyCSS: true,
           minifyJS: true,
           removeComments: true,
-          collapseWhitespace: true,
+          collapseWhitespace: true
         }
       };
-
-      var commonPack = [];
-
-      if(easyConfig.commonPack) {
-        commonPack = [ typeof easyConfig.commonPack === 'boolean' ? '__common__' : easyConfig.commonPack ];
-      }
-      entryHtml.forEach(function(conf) {
-        var _conf = Object.assign({}, _default_conf, conf);
-        if(_conf.chunks && commonPack.length) {
-          _conf.chunks = commonPack.concat(_conf.chunks);
-        }
-        plugins.push(new HtmlWebpackPlugin(_conf));
+      entryHtmls.forEach(conf => {
+        this.config.plugins.push(new HtmlWebpackPlugin(Object.assign({}, _conf, conf)));
       });
     }
   }
 }
 
-module.exports = Project;
+module.exports = EasyProject;

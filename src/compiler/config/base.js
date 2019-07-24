@@ -1,40 +1,25 @@
 /**
- * @file 基础默认配置类
- * @description 将EasyPack的配置文件转变成Webpack的配置
- * @author SH
+ * 基础webpack配置类
+ *
+ * Created By SH
  */
 
 const path = require('path');
 
-let DEFAULT_KEYS = [
-  'amd', 'bail', 'cache', 'loader', 'parallelism', 'profile', 'recordsPath', 'recordsInputPath', 'recordsOutputPath', 'context',
-  'entry', 'output', 'module', 'resolve', 'resolveLoader', 'plugins', 'devServer', 'devtool', 'targets', 'watch',
-  'watchOptions','externals', 'performance', 'node', 'stats',
-  'mode',
-  'optimization'
-];
+const V = require('./../../utils/const.js');
 
-class ConfigFactory {
+class BaseConfigFactory {
   constructor(easyConfig, workspace, env) {
     this.easyConfig = easyConfig;
     this.workspace = workspace;
     this.env = env;
     this.config = this._resolve(easyConfig, workspace);
   }
-
-  _isDev() {
-    return this.env === 'dev';
-  }
-
-  _isPrd() {
-    return this.env === 'prd';
-  }
-
   _resolve(easyConfig, workspace) {
     let config = this._getDefaultConfig();
     config.mode = this.env === 'dev' ? 'development' : 'production';
     Object.keys(easyConfig).forEach(key => {
-      if(DEFAULT_KEYS.indexOf(key) > -1) {
+      if(V.DEFAULT_WEBPACK_KEYS.indexOf(key) > -1) {
         config[key] = easyConfig[key];
       }
     });
@@ -45,7 +30,6 @@ class ConfigFactory {
     config.resolveLoader = easyConfig.resolveLoader || {};
     return config;
   }
-
   _getDefaultConfig() {
     return {
       watchOptions: {
@@ -53,11 +37,15 @@ class ConfigFactory {
       }
     };
   }
-
-  getConfig() {
+  getWebpackConfig() {
     return this.config;
   }
-
+  _isDev() {
+    return this.env === 'dev';
+  }
+  _isPrd() {
+    return this.env === 'prd';
+  }
   mergeEnvConfig() {
     if(this.env === 'dev') {
       this.mergeDevConfig();
@@ -65,37 +53,43 @@ class ConfigFactory {
       this.mergePrdConfig();
     }
   }
-
-  mergeDevConfig() {
-
+  mergeDevConfig() {}
+  mergePrdConfig() {}
+  setOutPutPath() {
+    let output = this.config.output || {};
+    output.path = path.join(this.workspace, V.OUTPUT_PATH_MAP[this.env]);
+    this.config.output = output;
   }
-
-  mergePrdConfig() {
-
+  setOutPutFileName () {
+    let output = this.config.output || {};
+    output.filename = this.env === 'dev' ? 'scripts/[name].js' : 'scripts/[name].[chunkhash:8].js';
+    this.config.output = output;
   }
-
+  setOutputPublicPath() {
+    let output = this.config.output || {};
+    output.publicPath = '';
+    this.config.output = output;
+  }
   setResolve() {
-    var modules = this.config.resolve.modules || [];
-    var easyPath = path.join(__easy__.root, 'node_modules');
-    var projectPath = path.join(__easy__.cwd, 'node_modules');
-    this.config.resolve.modules = [ projectPath, ...modules, easyPath ];
+    let modules = this.config.resolve.modules || [];
+    let easyModules = path.join(__easy__.root, 'node_modules');
+    let projectModules = path.join(__easy__.cwd, 'node_modules');
+    this.config.resolve.modules = [projectModules, ...modules, easyModules];
     return this;
   }
-
   setResolveLoaders() {
-    var modules = this.config.resolveLoader.modules || [];
-    var easyPath = path.join(__easy__.root, 'node_modules');
-    var projectPath = path.join(__easy__.cwd, 'node_modules');
-    this.config.resolveLoader.modules = [projectPath, ...modules, easyPath ];
+    let modules = this.config.resolveLoader.modules || [];
+    let easyModules = path.join(__easy__.root, 'node_modules');
+    let projectModules = path.join(__easy__.cwd, 'node_modules');
+    this.config.resolveLoader.modules = [projectModules, ...modules, easyModules];
 
-    var alias = this.config.resolveLoader.alias || {};
+    let alias = this.config.resolveLoader.alias || {};
     alias.sass = 'sass-loader';
-    alias['scss-loader'] = 'sass-loader';
     alias.scss = 'sass-loader';
+    alias['scss-loader'] = 'sass-loader';
     this.config.resolveLoader.alias = alias;
     return this;
   }
-
 }
 
-module.exports = ConfigFactory;
+module.exports = BaseConfigFactory;

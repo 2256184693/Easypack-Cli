@@ -2,6 +2,8 @@ var path = require('path');
 var HappyPack = require('happypack');
 var os = require("os");
 var happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+
 
 function resolve(dir) {
   return path.join(__dirname, './', dir)
@@ -23,11 +25,12 @@ var plugins = [
       }
     ]
   }),
+  new VueLoaderPlugin()
 ];
 
 
 module.exports = {
-
+  analyze: false,
   library: {
     'vendor': [
       'vue', 'vue-router', 'vuex'
@@ -46,7 +49,7 @@ module.exports = {
     inject: "body",
     chunks: ["index"]
   }],
-  historyApi : true, //开启HTML5 historyAPI  server 使用 所有的访问都到index.html 下
+  //historyApi : true, //开启HTML5 historyAPI  server 使用 所有的访问都到index.html 下
   cssLoader: {
     extra: true,
     happypack: true, // default true

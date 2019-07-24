@@ -6,15 +6,10 @@ $ npm link easy-cli
 
 1. openBrowser
 
+2. analyze
 
-2. commonPack
+3. cssLoader
 
-  Boolean, String(commonChunkName) 多入口时是否打一个公共的js文件
-
-3. analyze
-
-  Boolean, Object(webpack-bundlw-analyzer config)
-
-4. cssLoader
+4. 
 
  

@@ -1,5 +1,5 @@
 
-import * as Types from './mutation-types.js.js';
+import * as Types from './mutation-types.js';
 
 import axios from 'axios';
 

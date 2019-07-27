@@ -90,6 +90,7 @@ module.exports = {
           let info = stats.toJson();
           if(e || stats.hasErrors()) {
             log.error(`Build Error`, info.errors.join('\n'));
+            log.error(`Build Error`, e);
             return false;
           }
           process.stdout.write(stats.toString({

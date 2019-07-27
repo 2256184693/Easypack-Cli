@@ -18,6 +18,10 @@ const resolveConfig = require('../cli/resolve-config.js');
 
 const webpack = require('../compiler/index.js');
 
+const DllCache = require('../compiler/utils/dll-cache.js');
+
+const V = require('../utils/const.js');
+
 module.exports = {
   initProject: (templateName, projectName) => {
     const projectPath = path.join(__easy__.cwd, projectName);
@@ -65,20 +69,30 @@ module.exports = {
   },
   build: () => {
     const start = Date.now();
-    log.info('Easy-Cli start building...');
     let easyConfig = resolveConfig.getEasyConfig();
-    let promise = webpack.createCompiler(easyConfig, __easy__.cwd, 'prd');
+    let outputPath = resolveConfig.getOutputPath('prd');
+    cleanDist(outputPath);
+    log.info('Easy-Cli start building...');
+    let promise;
+    if(easyConfig.library) {
+      if(DllCache.hasCache(easyConfig, __easy__.cwd, 'prd')) { // 判断dll缓存
+        DllCache.useCache(outputPath, __easy__.cwd, 'prd');
+        promise = webpack.createBaseCompiler(easyConfig, __easy__.cwd, 'prd');
+      }else {
+        promise = webpack.createCompilerWithDll(easyConfig, __easy__.cwd, 'prd');
+      }
+    }else {
+      promise = webpack.createBaseCompiler(easyConfig, __easy__.cwd, 'prd');
+    }
     promise.then(data => {
       if(data.compiler) {
         data.compiler.run((e, stats) => {
-          const end = Date.now();
           let info = stats.toJson();
           if(e || stats.hasErrors()) {
-            log.error(`Build Error`, info.errors.join('\n\n'));
-            log.info(`Easy-Cli Build End! Spend Time: ${chalk.yellow(end - start + '')} ms`);
+            log.error(`Build Error`, info.errors.join('\n'));
             return false;
           }
-          console.log(stats.toString({
+          process.stdout.write(stats.toString({
             modules: false,
             children: false,
             chunks: false,
@@ -86,17 +100,30 @@ module.exports = {
             errorDetails: false,
             errors: false,
             colors: true
-          }));
-          log.success('Build Success');
-          log.info(`Easy-Cli Build End! Spend Time: ${chalk.yellow(end - start + '')} ms`);
+          }) + '\n');
+          if(data.easyDll) { // 存在dll，缓存相关内容
+            let dllCacheData = data.easyDll.getCacheData();
+            DllCache.createCache(data.dllConfig, __easy__.cwd, 'prd', dllCacheData);
+          }
+          const end = Date.now();
+          log.success(`Easy-Cli Build Success!  Spend Time: ${chalk.yellow(end - start + '')} ms`);
         });
       }
     }).catch(e => {
-      const end = Date.now();
-      log.info(`Easy-Cli Build End! Spend Time: ${chalk.yellow(end - start + '')}`);
       log.error(`Build Error`, e);
       console.log('Build Error:', e);
     });
 
+  }
+}
+
+/**
+ * 清空打包目录
+ */
+
+const cleanDist = (buildPath) => {
+  if(fs.existsSync(buildPath)) {
+    fs.removeSync(buildPath);
+    log.info(`Clean build folder successfully!`);
   }
 }

@@ -8,7 +8,9 @@ const _ = require('lodash');
 
 const path = require('path');
 
-const fs = require('fs-extra')
+const fs = require('fs-extra');
+
+const V = require('../utils/const.js');
 
 let PROJECT_CONFIG = {};
 
@@ -24,7 +26,12 @@ module.exports = {
     }
   },
   getEasyConfig: () => PROJECT_CONFIG.config,
-  getEntryHtml: () => PROJECT_CONFIG.entryHtml
+  getEntryHtml: () => PROJECT_CONFIG.entryHtml,
+  getOutputPath: (env) => {
+    let easyConfig = PROJECT_CONFIG.config;
+    let outputPath = (easyConfig.output && easyConfig.output.path) || path.join(__easy__.cwd, V.OUTPUT_PATH_MAP[env]);
+    return outputPath;
+  }
 };
 
 const _load = (cb) => {

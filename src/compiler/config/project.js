@@ -8,11 +8,15 @@ const _ = require('lodash');
 
 const path = require('path');
 
-const BaseConfigFactory = require('./base.js');
+const Base = require('./base.js');
 
 const createCssLoader = require('../utils/cssLoader.js');
 
+const webpack = require('webpack');
+
 const webpackMerge = require('webpack-merge');
+
+const V = require('../../utils/const.js');
 
 const devConfig = require('./project.dev.js');
 
@@ -22,7 +26,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-class EasyProject extends BaseConfigFactory {
+const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
+
+class EasyProject extends Base {
   constructor(easyConfig, workspace, env) {
     super(easyConfig, workspace, env);
     this.setEntry();
@@ -35,6 +41,7 @@ class EasyProject extends BaseConfigFactory {
     this.setResolveLoaders();
     this.setCssLoaders();
     this.setPlugins();
+    this.setDllPlugin();
     this.setEntryHtml();
   }
   mergeDevConfig() {
@@ -66,13 +73,19 @@ class EasyProject extends BaseConfigFactory {
   setOutPut() {
     var output = this.config.output || {};
     if(!output.path) {
-      this.setOutPutPath();
+      this.config.output = Object.assign(output, {
+        path: this._outPutPath()
+      });
     }
     if(!output.filename) {
-      this.setOutPutFileName();
+      this.config.output = Object.assign(output, {
+        filename: this._outPutFileName()
+      });
     }
     if(!output.publicPath) {
-      this.setOutputPublicPath();
+      this.config.output = Object.assign(output, {
+        publicPath: this._outputPublicPath()
+      });
     }
   }
   setCssLoaders() {
@@ -91,6 +104,17 @@ class EasyProject extends BaseConfigFactory {
     }));
     this.config.plugins = plugins;
   }
+  setDllPlugin() {
+    if(this.easyConfig.library) {
+      let dllNames = Object.keys(this.easyConfig.library);
+      dllNames.forEach(name => {
+        this.config.plugins.push(new webpack.DllReferencePlugin({
+          context: this.workspace,
+          manifest: this._getDllManifest(path.join(this.config.output.path, V.DEFAULT_DLL_MANIFEST_PATH.replace(/\[name\]/, name)))
+        }));
+      });
+    }
+  }
   setEntryHtml() {
     let entryHtmls = this.easyConfig.entryHtml;
     if(entryHtmls && entryHtmls.length) {
@@ -108,8 +132,80 @@ class EasyProject extends BaseConfigFactory {
       entryHtmls.forEach(conf => {
         this.config.plugins.push(new HtmlWebpackPlugin(Object.assign({}, _conf, conf)));
       });
+      if(this.easyConfig.library) {
+        this.insertDll();
+      }
     }
+  }
+  insertDll() {
+    let publicPath = this.config.output.publicPath;
+    let dllFiles = this._getDllFiles();
+    let libraryMode = this.easyConfig.libraryMode || 'all';
+    if(libraryMode === 'all') {
+      let tags = Object.keys(dllFiles).map(name => dllFiles[name]);
+      tags = _.flatten(tags).map(handleDllTags(publicPath));
+      this.config.plugins.push(new HtmlWebpackTagsPlugin({
+        tags,
+        publicPath,
+        append: false
+      }));
+    }else if(libraryMode === 'custom') {
+      let tagsMap = {};
+      this.easyConfig.entryHtml.forEach(config => {
+        let chunks = config.chunks || [];
+        let tags = Object.keys(dllFiles).filter(dllKey => chunks.indexOf(dllKey) > -1);
+        if(tags.length) {
+          let key = tags.join('+');
+          if(!tagsMap[key]) {
+            tagsMap[key] = {
+              tags: tags.map(tag => dllFiles[tag]),
+              files: [],
+            }
+          }
+          tagsMap[key].files.push(config.filename);
+        }
+      });
+      if(!_.isEmpty(tagsMap)) {
+        Object.keys(tagsMap).forEach(tagKey => {
+          let {tags, files} = tagsMap[tagKey];
+          tags = _.flatten(tags).map(handleDllTags(publicPath));
+          this.config.plugins.push(new HtmlWebpackTagsPlugin({
+            tags,
+            files,
+            append: false,
+            publicPath
+          }));
+        });
+      }
+    }
+  }
+
+  _getDllFiles() {
+    let fs = __easy__.fs || require('fs');
+    let dllFiles = fs.readFileSync(path.join(this.config.output.path, V.DEFAULT_DLL_FILES_PATH));
+    dllFiles = JSON.parse(dllFiles);
+    return dllFiles;
+  }
+
+  _getDllManifest(filePath) {
+    let fs = __easy__.fs || require('fs');
+    let manifest = fs.readFileSync(filePath).toString();
+    manifest =  JSON.parse(manifest);
+    return manifest;
   }
 }
 
+/**
+ *
+ */
+
+const handleDllTags = publicPath => tag => {
+  let _path = publicPath + tag;
+  if(/^(https?:)?\/\//.test(_path)) {
+    return {
+      path: _path
+    };
+  }
+  return _path;
+}
 module.exports = EasyProject;

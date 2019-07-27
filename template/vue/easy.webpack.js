@@ -1,5 +1,6 @@
 var path = require('path');
 
+// TODO:
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 function resolve(dir) {
@@ -7,36 +8,36 @@ function resolve(dir) {
 }
 
 module.exports = {
-  analyze: true,
+  analyze: false,
   openBrowser: false,
 
-  // library: {
-  //   'vendor': [
-  //     'vue', 'vue-router', 'vuex'
-  //   ]
-  // },
+  libraryMode: 'custom', // dll依赖方式 ['custom'|'all']
+  library: {
+    'vendor': [
+      'vue', 'vue-router', 'vuex',
+    ]
+  },
+
+  entryHtml: [{
+    filename: 'index.html',
+    template: './index.html',
+    inject: 'body',
+    chunks: ['index', 'vendor']
+  }],
 
   entry: {
     index: resolve("./src/main.js")
   },
+  output: {
+    path: resolve('./dist')
+  },
 
-  // htmlMode: "inject",
-
-  entryHtml: [{
-    filename: "index.html",
-    template: "./index.html",
-    inject: "body",
-    chunks: ["index"]
-  }],
-  // historyApi : true, //开启HTML5 historyAPI  server 使用 所有的访问都到index.html 下
   cssLoader: {
     vue: true,
     extensions: ['.css', '.scss', '.sass', '.less'],
     css: {},
     scss: {}
   },
-
-  // proxyTable: {},
 
   resolve: {
     extensions: ['.js', '.vue', '.json'],

@@ -46,6 +46,13 @@ module.exports = {
     if(typeof message === 'object') {
       message = Array.prototype.join.call(message, ' ');
     }
-    console.log(`[${new Date().toLocaleString()}]: ${chalk[color](iconMap[messageType])} ${chalk[color](message)}`);
+    let timeStr = '', name = '';
+    if(program.timestamp) {
+      timeStr = `[${new Date().toLocaleString()}]:`;
+    }
+    if(this.__namespace) {
+      name = `[${this.__namespace}]`;
+    }
+    console.log(`${chalk[color](iconMap[messageType])}${chalk.gray(timeStr)} ${chalk.bgCyan(name)} ${chalk[color](message)}`);
   }
 }

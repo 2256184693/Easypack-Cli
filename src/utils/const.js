@@ -1,5 +1,9 @@
 
-
+/**
+ * Cli Common Variable
+ *
+ * Created By SH
+ */
 const DEFAULT_PORT = 9000;
 
 const DEFAULT_HOST = 'http://127.0.0.1';
@@ -47,3 +51,13 @@ exports.DEFAULT_CSS_LOADER_CONFIG = {
   'stylus': {},
   'vue': {},
 }
+
+exports.DEFAULT_DLL_MANIFEST_PATH = 'dll/[name]-manifest.json';
+
+exports.DEFAULT_DLL_FILES_PATH = 'dll/dll-files.json';
+
+exports.DEFAULT_DLL_CHUNK_NAME = '__lib_[name]__';
+
+exports.DEFAULT_CACHE_PATH = '.easy_cache';
+
+exports.DEFAULT_CACHE_NAME = 'cache-manifest.json';

@@ -18,6 +18,7 @@ program
   .version(package.version, '-v --version')
   .usage('<command> [options]')
   .option('-p, --port <port>', 'server port')
+  .option('-t, --timestamp', 'log with timestamp')
 
 program
   .command('init <template-name> [project-name]')

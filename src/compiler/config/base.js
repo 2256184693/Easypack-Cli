@@ -15,6 +15,7 @@ class BaseConfigFactory {
     this.env = env;
     this.config = this._resolve(easyConfig, workspace);
   }
+
   _resolve(easyConfig, workspace) {
     let config = this._getDefaultConfig();
     config.mode = this.env === 'dev' ? 'development' : 'production';
@@ -30,6 +31,7 @@ class BaseConfigFactory {
     config.resolveLoader = easyConfig.resolveLoader || {};
     return config;
   }
+
   _getDefaultConfig() {
     return {
       watchOptions: {
@@ -37,15 +39,18 @@ class BaseConfigFactory {
       }
     };
   }
+
   getWebpackConfig() {
     return this.config;
   }
+
   _isDev() {
     return this.env === 'dev';
   }
   _isPrd() {
     return this.env === 'prd';
   }
+
   mergeEnvConfig() {
     if(this.env === 'dev') {
       this.mergeDevConfig();
@@ -53,23 +58,11 @@ class BaseConfigFactory {
       this.mergePrdConfig();
     }
   }
+
   mergeDevConfig() {}
+
   mergePrdConfig() {}
-  setOutPutPath() {
-    let output = this.config.output || {};
-    output.path = path.join(this.workspace, V.OUTPUT_PATH_MAP[this.env]);
-    this.config.output = output;
-  }
-  setOutPutFileName () {
-    let output = this.config.output || {};
-    output.filename = this.env === 'dev' ? 'scripts/[name].js' : 'scripts/[name].[chunkhash:8].js';
-    this.config.output = output;
-  }
-  setOutputPublicPath() {
-    let output = this.config.output || {};
-    output.publicPath = '';
-    this.config.output = output;
-  }
+
   setResolve() {
     let modules = this.config.resolve.modules || [];
     let easyModules = path.join(__easy__.root, 'node_modules');
@@ -77,6 +70,7 @@ class BaseConfigFactory {
     this.config.resolve.modules = [projectModules, ...modules, easyModules];
     return this;
   }
+
   setResolveLoaders() {
     let modules = this.config.resolveLoader.modules || [];
     let easyModules = path.join(__easy__.root, 'node_modules');
@@ -89,6 +83,18 @@ class BaseConfigFactory {
     alias['scss-loader'] = 'sass-loader';
     this.config.resolveLoader.alias = alias;
     return this;
+  }
+
+  _outPutPath() {
+    return path.join(this.workspace, V.OUTPUT_PATH_MAP[this.env]);
+  }
+
+  _outPutFileName () {
+    return this.env === 'dev' ? 'scripts/[name].js' : 'scripts/[name].[chunkhash:8].js';
+  }
+
+  _outputPublicPath() {
+    return '';
   }
 }
 

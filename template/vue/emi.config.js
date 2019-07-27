@@ -1,6 +1,6 @@
 var path = require('path');
 var HappyPack = require('happypack');
-var os = require("os");
+var os = require('os');
 var happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
@@ -13,15 +13,15 @@ function resolve(dir) {
 // -------------------------------
 var plugins = [
   new HappyPack({
-    id: "babel",
+    id: 'babel',
     threadPool: happyThreadPool,
     cache: true,
     loaders: [
       {
-        loader: "babel-loader",
-        query: {
-          cacheDirectory: path.resolve(__dirname, "./.cache")
-        }
+        loader: 'babel-loader',
+        // query: {
+        //   cacheDirectory: path.resolve(__dirname, './.cache')
+        // }
       }
     ]
   }),
@@ -31,23 +31,27 @@ var plugins = [
 
 module.exports = {
   analyze: false,
+  libraryManual: 'group',
   library: {
-    'vendor': [
-      'vue', 'vue-router', 'vuex'
+    'vendor1': [
+      'vue', 'vue-router',
+    ],
+    'vendor2': [
+      'vuex'
     ]
   },
 
   entry: {
-    index: "./src/main.js"
+    index: './src/main.js'
   },
 
-  htmlMode: "inject",
+  htmlMode: 'inject',
 
   entryHtml: [{
-    filename: "index.html",
-    template: "./index.html",
-    inject: "body",
-    chunks: ["index"]
+    filename: 'index.html',
+    template: './index.html',
+    inject: 'body',
+    chunks: ['index', 'vendor']
   }],
   //historyApi : true, //开启HTML5 historyAPI  server 使用 所有的访问都到index.html 下
   cssLoader: {
@@ -61,7 +65,7 @@ module.exports = {
 
   resolve: {
     extensions: ['.js', '.vue', '.json'],
-    mainFiles: ["index", "index.vue"],
+    mainFiles: ['index', 'index.vue'],
     modules: [
       resolve('src'),
       resolve('node_modules')

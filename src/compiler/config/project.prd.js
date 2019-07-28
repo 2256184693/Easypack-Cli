@@ -16,7 +16,9 @@ module.exports = (workspace, easyConfig) => {
     plugins: [],
     optimization: {
       minimizer: [
-        new TerserJSPlugin(),
+        new TerserJSPlugin({
+          parallel: true
+        }),
         new OptimizeCssAssetsPlugin({})
       ]
     }

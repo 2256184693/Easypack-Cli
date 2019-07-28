@@ -8,6 +8,13 @@ const EasyProject = require('./config/project.js');
 
 const EasyDll = require('./config/dll.js');
 
+const program = require('commander');
+
+// FIXME: test
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
+
+const smp = new SpeedMeasurePlugin();
+
 const createCompiler = (easyConfig, workspace, env) => {
   if(easyConfig.library) {
     return createCompilerWithDll(easyConfig, workspace, env);
@@ -22,7 +29,10 @@ const createBaseCompiler = (easyConfig, workspace, env) => {
       let webpackConfig = easyProject.getWebpackConfig();
 
       // FIXME: test
-      // fs.writeFileSync('./test.json', JSON.stringify(webpackConfig));
+      if(program.test) {
+        webpackConfig = smp.wrap(webpackConfig);
+        fs.writeFileSync('./test.json', JSON.stringify(webpackConfig));
+      }
 
       let compiler = webpack(webpackConfig);
       if(__easy__.fs) {
@@ -45,7 +55,10 @@ const createCompilerWithDll = (easyConfig, workspace, env) => {
     let dllWebpackConfig = easyDll.getWebpackConfig();
 
     // FIXME: test
-    // fs.writeFileSync('./test.dll.json', JSON.stringify(dllWebpackConfig));
+    if(program.test) {
+      dllWebpackConfig = smp.wrap(dllWebpackConfig);
+      fs.writeFileSync('./test.dll.json', JSON.stringify(dllWebpackConfig));
+    }
 
     let dllCompiler = webpack(dllWebpackConfig);
     if(__easy__.fs) {
@@ -70,7 +83,10 @@ const createCompilerWithDll = (easyConfig, workspace, env) => {
         let webpackConfig = easyProject.getWebpackConfig();
 
         // FIXME: test
-        // fs.writeFileSync('./test.json', JSON.stringify(webpackConfig));
+        if(program.test) {
+          webpackConfig = smp.wrap(webpackConfig);
+          fs.writeFileSync('./test.json', JSON.stringify(webpackConfig));
+        }
 
         let compiler = webpack(webpackConfig);
         if(__easy__.fs) {

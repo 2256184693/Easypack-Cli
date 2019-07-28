@@ -28,6 +28,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+
 class EasyProject extends Base {
   constructor(easyConfig, workspace, env) {
     super(easyConfig, workspace, env);
@@ -39,6 +41,7 @@ class EasyProject extends Base {
     this.setOutPut();
     this.setResolve();
     this.setResolveLoaders();
+    this.setLoaders();
     this.setCssLoaders();
     this.setPlugins();
     this.setDllPlugin();
@@ -88,6 +91,79 @@ class EasyProject extends Base {
       });
     }
   }
+  setLoaders() {
+    let rules = this.config.module.rules || [];
+    let hasVue, hasImage, hasJs, hasFont;
+    let extraRules = [];
+    rules.forEach(loader => {
+      if(loader.test) {
+        if(hasLoader(loader.test, ['.vue'])) {
+          hasVue = true;
+        }else if(hasLoader(loader.test, ['.png', '.jpg', 'jpeg', 'webp', 'gif', '.svg'])) {
+          hasImage = true;
+        }else if(hasLoader(loader.test, ['.js', 'jsx'])) {
+          hasJs = true;
+        }else if(hasLoader(loader.test, ['.ttf', '.otf', '.eot', '.woff2'])) {
+          hasFont = true;
+        }
+      }
+    });
+    if(!hasVue && this.easyConfig.vue) {
+      extraRules.push({
+        test: /\.vue$/,
+        loader: 'vue-loader',
+        exclude: [path.join(this.workspace, 'node_modules')]
+      });
+    }
+    if(!hasImage) {
+      extraRules.push({
+        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        loader: 'url-loader',
+        query: {
+          limit: 10000,
+          name: this._isDev() ? 'static/[name].[ext]' : 'static/[name].[hash:7].[ext]'
+        }
+      });
+    }
+    if(!hasJs) {
+      extraRules.push({
+        test: /\.jsx?$/,
+        loader: 'babel-loader',
+        options: {
+          cacheDirectory: true
+        }
+      });
+    }
+    if(!hasFont) {
+      extraRules.push({
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+        loader: 'url-loader',
+        query: {
+          limit: 10000,
+          name: this._isDev() ? 'static/[name].[ext]' : 'static/[name].[hash:7].[ext]'
+        }
+      });
+    }
+    if(this.easyConfig.parallel) { // 并行
+      extraRules = extraRules.map(rule => {
+        let newRule = _.merge({}, rule);
+        if(rule.use && rule.use.length) {
+          newRule.use.splice(0, 0, 'thread-loader');
+          return newRule;
+        }else {
+          delete newRule.test;
+          return {
+            test: rule.test,
+            use: [
+              'thread-loader',
+              newRule
+            ]
+          }
+        }
+      });
+    }
+    this.config.module.rules = rules.concat(extraRules);
+  }
   setCssLoaders() {
     let rules = this.config.module.rules || [];
     let opt = this.easyConfig.cssLoader || {};
@@ -98,6 +174,9 @@ class EasyProject extends Base {
   }
   setPlugins() {
     let plugins = this.config.plugins;
+    if(this.easyConfig.vue) {
+      plugins.push(new VueLoaderPlugin());
+    }
     plugins.push(new MiniCssExtractPlugin({
       filename: this._isDev() ? 'css/[name].css' : 'css/[name].[chunkhash:8].css',
       chunks: 'all',
@@ -207,5 +286,9 @@ const handleDllTags = publicPath => tag => {
     };
   }
   return _path;
+}
+
+const hasLoader = (reg, fileList) => {
+  return fileList.find(file => file.match(reg));
 }
 module.exports = EasyProject;

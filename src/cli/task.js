@@ -88,9 +88,12 @@ module.exports = {
       if(data.compiler) {
         data.compiler.run((e, stats) => {
           let info = stats.toJson();
-          if(e || stats.hasErrors()) {
-            log.error(`Build Error`, info.errors.join('\n'));
-            log.error(`Build Error`, e);
+          if(e) {
+            log.error(`Build Error: ${e}`);
+            return
+          }
+          if(stats.hasErrors()) {
+            log.error(`Build Error: ${info.errors.join('\n')}`);
             return false;
           }
           process.stdout.write(stats.toString({
@@ -111,8 +114,7 @@ module.exports = {
         });
       }
     }).catch(e => {
-      log.error(`Build Error`, e);
-      console.log('Build Error:', e);
+      log.error(`Build Error ${e}`);
     });
 
   }

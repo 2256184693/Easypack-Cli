@@ -9,7 +9,12 @@ function resolve(dir) {
 
 module.exports = {
   analyze: false,
+
   openBrowser: false,
+
+  vue: true,
+
+  // parallel: true,
 
   libraryMode: 'custom', // dll依赖方式 ['custom'|'all']
   library: {
@@ -33,7 +38,6 @@ module.exports = {
   },
 
   cssLoader: {
-    vue: true,
     extensions: ['.css', '.scss', '.sass', '.less'],
     css: {},
     scss: {}
@@ -50,34 +54,34 @@ module.exports = {
 
   module: {
     rules: [
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader'
-      },
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        include: [resolve('src')]
-      },
-      {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        loader: 'url-loader',
-        query: {
-          limit: 10000,
-          name: 'static/img/[name].[hash:7].[ext]'
-        }
-      },
-      {
-        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-        loader: 'url-loader',
-        query: {
-          limit: 10000,
-          name: 'static/fonts/[name].[hash:7].[ext]'
-        }
-      }
+      // {
+      //   test: /\.vue$/,
+      //   loader: 'vue-loader'
+      // },
+      // {
+      //   test: /\.js$/,
+      //   loader: 'babel-loader',
+      //   include: [resolve('src')]
+      // },
+      // {
+      //   test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+      //   loader: 'url-loader',
+      //   query: {
+      //     limit: 10000,
+      //     name: 'static/img/[name].[hash:7].[ext]'
+      //   }
+      // },
+      // {
+      //   test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+      //   loader: 'url-loader',
+      //   query: {
+      //     limit: 10000,
+      //     name: 'static/fonts/[name].[hash:7].[ext]'
+      //   }
+      // }
     ]
   },
   plugins: [
-    new VueLoaderPlugin()
+    // new VueLoaderPlugin()
   ]
 }

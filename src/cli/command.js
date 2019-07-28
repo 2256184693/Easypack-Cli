@@ -19,6 +19,7 @@ program
   .usage('<command> [options]')
   .option('-p, --port <port>', 'server port')
   .option('-t, --timestamp', 'log with timestamp')
+  .option('-test, --test', 'output webpack config')
 
 program
   .command('init <template-name> [project-name]')

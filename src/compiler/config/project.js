@@ -30,6 +30,8 @@ const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
+const loaderFactory = require('../utils/loaderFactory.js');
+
 class EasyProject extends Base {
   constructor(easyConfig, workspace, env) {
     super(easyConfig, workspace, env);
@@ -99,50 +101,26 @@ class EasyProject extends Base {
       if(loader.test) {
         if(hasLoader(loader.test, ['.vue'])) {
           hasVue = true;
-        }else if(hasLoader(loader.test, ['.png', '.jpg', 'jpeg', 'webp', 'gif', '.svg'])) {
-          hasImage = true;
         }else if(hasLoader(loader.test, ['.js', 'jsx'])) {
           hasJs = true;
+        }else if(hasLoader(loader.test, ['.png', '.jpg', 'jpeg', 'webp', 'gif', '.svg'])) {
+          hasImage = true;
         }else if(hasLoader(loader.test, ['.ttf', '.otf', '.eot', '.woff2'])) {
           hasFont = true;
         }
       }
     });
     if(!hasVue && this.easyConfig.vue) {
-      extraRules.push({
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        exclude: [path.join(this.workspace, 'node_modules')]
-      });
-    }
-    if(!hasImage) {
-      extraRules.push({
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        loader: 'url-loader',
-        query: {
-          limit: 10000,
-          name: this._isDev() ? 'static/[name].[ext]' : 'static/[name].[hash:7].[ext]'
-        }
-      });
+      extraRules.push(loaderFactory.vueLoader());
     }
     if(!hasJs) {
-      extraRules.push({
-        test: /\.jsx?$/,
-        loader: 'babel-loader',
-        options: {
-          cacheDirectory: true
-        }
-      });
+      extraRules.push(loaderFactory.jsLoader());
+    }
+    if(!hasImage) {
+      rules.push(loaderFactory.imageLoader(this.env));
     }
     if(!hasFont) {
-      extraRules.push({
-        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-        loader: 'url-loader',
-        query: {
-          limit: 10000,
-          name: this._isDev() ? 'static/[name].[ext]' : 'static/[name].[hash:7].[ext]'
-        }
-      });
+      rules.push(loaderFactory.fontLoader(this.env));
     }
     if(this.easyConfig.parallel) { // 并行
       extraRules = extraRules.map(rule => {

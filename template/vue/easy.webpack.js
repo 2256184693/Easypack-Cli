@@ -14,9 +14,9 @@ module.exports = {
 
   vue: true,
 
-  // parallel: true,
+  parallel: true,
 
-  libraryMode: 'custom', // dll依赖方式 ['custom'|'all']
+  libraryMode: 'all', // dll依赖方式 ['custom'|'all']
   library: {
     'vendor': [
       'vue', 'vue-router', 'vuex',
@@ -53,35 +53,7 @@ module.exports = {
   },
 
   module: {
-    rules: [
-      // {
-      //   test: /\.vue$/,
-      //   loader: 'vue-loader'
-      // },
-      // {
-      //   test: /\.js$/,
-      //   loader: 'babel-loader',
-      //   include: [resolve('src')]
-      // },
-      // {
-      //   test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-      //   loader: 'url-loader',
-      //   query: {
-      //     limit: 10000,
-      //     name: 'static/img/[name].[hash:7].[ext]'
-      //   }
-      // },
-      // {
-      //   test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-      //   loader: 'url-loader',
-      //   query: {
-      //     limit: 10000,
-      //     name: 'static/fonts/[name].[hash:7].[ext]'
-      //   }
-      // }
-    ]
+    rules: []
   },
-  plugins: [
-    // new VueLoaderPlugin()
-  ]
+  plugins: []
 }

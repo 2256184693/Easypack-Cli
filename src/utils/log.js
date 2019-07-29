@@ -47,7 +47,7 @@ module.exports = {
       message = Array.prototype.join.call(message, ' ');
     }
     let timeStr = '', name = '';
-    if(program.timestamp) {
+    if(program.date) {
       timeStr = `[${new Date().toLocaleString()}]:`;
     }
     if(this.__namespace) {

@@ -4,11 +4,7 @@
  * Created By SH
  */
 
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
-const TerserJSPlugin = require('terser-webpack-plugin');
-
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const pluginFactory = require('../utils/pluginFactory.js');
 
 module.exports = (workspace, easyConfig) => {
   let config = {
@@ -16,10 +12,8 @@ module.exports = (workspace, easyConfig) => {
     plugins: [],
     optimization: {
       minimizer: [
-        new TerserJSPlugin({
-          parallel: true
-        }),
-        new OptimizeCssAssetsPlugin({})
+        pluginFactory.terserPlugin(),
+        pluginFactory.optimizeCssPlugin(),
       ]
     }
     // TODO:
@@ -46,7 +40,7 @@ module.exports = (workspace, easyConfig) => {
         analyzerMode: 'static',
       };
     }
-    config.plugins.push(new BundleAnalyzerPlugin(easyConfig.analyze));
+    config.plugins.push(pluginFactory.analyzePlugin(easyConfig.analyze));
   }
   return config;
 };

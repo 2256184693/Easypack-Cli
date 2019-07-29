@@ -8,17 +8,15 @@ const webpack = require('webpack');
 
 const V = require('../../utils/const.js');
 
-const TerserJSPlugin = require('terser-webpack-plugin');
-
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const pluginFactory = require('../utils/pluginFactory.js');
 
 module.exports = (workspace, easyConfig, dll) => {
   let config = {
     mode: 'production',
     optimization: {
       minimizer: [
-        new TerserJSPlugin(),
-        new OptimizeCssAssetsPlugin({})
+        pluginFactory.terserPlugin(),
+        pluginFactory.optimizeCssPlugin(),
       ]
     },
     plugins: [

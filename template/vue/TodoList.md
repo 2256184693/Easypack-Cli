@@ -6,18 +6,18 @@
 
 3. README 编写
 
-4. thread-loader集成(url-loader | vue-loader | babel-loader)
+4. happypack集成
 
-5. postcss.config.js
+5. thread-loader集成(url-loader | vue-loader | babel-loader)
 
-6. .babelrc
+6. postcss.config.js
 
-7. .eslintrc
+7. .babelrc
 
-8. typescript？
+8. .eslintrc
 
-9. happypack
+9.  typescript？
 
 # FIXME
 
-1. easyConfig => webpackConfig 类重构 v1
+

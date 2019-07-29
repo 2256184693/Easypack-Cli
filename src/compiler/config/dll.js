@@ -16,14 +16,11 @@ const prdConfig = require('./dll.prd.js');
 
 const webpackMerge = require('webpack-merge');
 
-const createCssLoader = require('../utils/cssLoader.js');
-
 const V = require('../../utils/const.js');
 
-const DllManifestPlugin = require('../utils/dll-manifest-plugin.js');
+const createCssLoader = require('../utils/cssLoader.js');
 
-// const ManifestOlugin = require('webpack-manifest-plugin');
-
+const pluginFactory = require('../utils/pluginFactory.js');
 
 class EasyDll extends Base {
   constructor(easyConfig, workspace, env) {
@@ -100,13 +97,15 @@ class EasyDll extends Base {
   setCssLoaders() {
     let rules = this.config.module.rules || [];
     let opt = this.easyConfig.cssLoader || {};
-    const loaders = createCssLoader();
+    const loaders = createCssLoader(_.merge({}, opt, {
+      vue: this.easyConfig.vue
+    }));
     this.config.module.rules = rules.concat(loaders);
   }
 
   setPlugins() {
     // 存储生成的dll映射。在项目打包的html-webpack-plugin中增加chunk依赖
-    this.config.plugins.push(new DllManifestPlugin({
+    this.config.plugins.push(pluginFactory.dllManifestPlugin({
       filename: this.dll.dllFilePath,
     }));
   }

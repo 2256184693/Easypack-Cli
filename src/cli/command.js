@@ -18,8 +18,8 @@ program
   .version(package.version, '-v --version')
   .usage('<command> [options]')
   .option('-p, --port <port>', 'server port')
-  .option('-t, --timestamp', 'log with timestamp')
-  .option('-test, --test', 'output webpack config')
+  .option('-d, --date', 'log with current date')
+  .option('-t, --test', 'output webpack config')
 
 program
   .command('init <template-name> [project-name]')

@@ -22,13 +22,7 @@ const devConfig = require('./project.dev.js');
 
 const prdConfig = require('./project.prd.js');
 
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
-const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
-
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const pluginFactory = require('../utils/pluginFactory.js');
 
 const loaderFactory = require('../utils/loaderFactory.js');
 
@@ -123,29 +117,16 @@ class EasyProject extends Base {
       rules.push(loaderFactory.fontLoader(this.env));
     }
     if(this.easyConfig.parallel) { // 并行
-      extraRules = extraRules.map(rule => {
-        let newRule = _.merge({}, rule);
-        if(rule.use && rule.use.length) {
-          newRule.use.splice(0, 0, 'thread-loader');
-          return newRule;
-        }else {
-          delete newRule.test;
-          return {
-            test: rule.test,
-            use: [
-              'thread-loader',
-              newRule
-            ]
-          }
-        }
-      });
+      extraRules = extraRules.map(loaderFactory.useThread);
     }
     this.config.module.rules = rules.concat(extraRules);
   }
   setCssLoaders() {
     let rules = this.config.module.rules || [];
     let opt = this.easyConfig.cssLoader || {};
-    const loaders = createCssLoader(opt, this.env);
+    const loaders = createCssLoader(_.merge({}, opt, {
+      vue: this.easyConfig.vue
+    }), this.env);
 
     this.config.module.rules = rules.concat(loaders);
     return this;
@@ -153,9 +134,9 @@ class EasyProject extends Base {
   setPlugins() {
     let plugins = this.config.plugins;
     if(this.easyConfig.vue) {
-      plugins.push(new VueLoaderPlugin());
+      plugins.push(pluginFactory.vueLoaderPlugin());
     }
-    plugins.push(new MiniCssExtractPlugin({
+    plugins.push(pluginFactory.miniCssPlugin({
       filename: this._isDev() ? 'css/[name].css' : 'css/[name].[chunkhash:8].css',
       chunks: 'all',
     }));
@@ -187,7 +168,7 @@ class EasyProject extends Base {
         }
       };
       entryHtmls.forEach(conf => {
-        this.config.plugins.push(new HtmlWebpackPlugin(Object.assign({}, _conf, conf)));
+        this.config.plugins.push(pluginFactory.htmlPlugin(Object.assign({}, _conf, conf)));
       });
       if(this.easyConfig.library) {
         this.insertDll();
@@ -201,7 +182,7 @@ class EasyProject extends Base {
     if(libraryMode === 'all') {
       let tags = Object.keys(dllFiles).map(name => dllFiles[name]);
       tags = _.flatten(tags).map(handleDllTags(publicPath));
-      this.config.plugins.push(new HtmlWebpackTagsPlugin({
+      this.config.plugins.push(pluginFactory.tagsPlugin({
         tags,
         publicPath,
         append: false
@@ -226,7 +207,7 @@ class EasyProject extends Base {
         Object.keys(tagsMap).forEach(tagKey => {
           let {tags, files} = tagsMap[tagKey];
           tags = _.flatten(tags).map(handleDllTags(publicPath));
-          this.config.plugins.push(new HtmlWebpackTagsPlugin({
+          this.config.plugins.push(pluginFactory.tagsPlugin({
             tags,
             files,
             append: false,

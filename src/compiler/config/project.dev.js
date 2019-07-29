@@ -6,7 +6,7 @@
 
 const webpack = require('webpack');
 
-const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+const pluginFactory = require('../utils/pluginFactory.js');
 
 module.exports = (workspace, easyConfig) => {
   let config = {
@@ -14,7 +14,7 @@ module.exports = (workspace, easyConfig) => {
     devtool: 'cheap-module-eval-source-map',
     plugins: [
       new webpack.NoEmitOnErrorsPlugin(),
-      new FriendlyErrorsWebpackPlugin(),
+      pluginFactory.friendlyErrorsPlugin(),
       new webpack.HotModuleReplacementPlugin(),
     ]
   };

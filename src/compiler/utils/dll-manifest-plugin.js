@@ -8,6 +8,8 @@ const _ = require('lodash');
 
 const fs = require('fs');
 
+const fse = require('fs-extra');
+
 const path = require('path');
 
 const dllLog = log.namespace('DLL');
@@ -28,6 +30,8 @@ class DllManifestPlugin {
       }
       let outputPath = this.opts.path || compiler.outputPath;
       let filePath = path.join(outputPath, './', this.opts.filename);
+      let fs = __easy__.fs || require('fs');
+      // fse.outputFileSync(filePath, JSON.stringify(data));
       fs.writeFileSync(filePath, JSON.stringify(data));
       dllLog.info(`manifest file created successfully: ${filePath}`);
       callback();

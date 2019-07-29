@@ -30,6 +30,7 @@ const createBaseCompiler = (easyConfig, workspace, env) => {
       // FIXME: test
       if(program.test) {
         // webpackConfig = smp.wrap(webpackConfig);
+        log.info(`Output test.json`);
         fs.writeFileSync('./test.json', JSON.stringify(webpackConfig));
       }
 
@@ -56,6 +57,7 @@ const createCompilerWithDll = (easyConfig, workspace, env) => {
     // FIXME: test
     if(program.test) {
       // dllWebpackConfig = smp.wrap(dllWebpackConfig);
+      log.info(`Output test.dll.json`);
       fs.writeFileSync('./test.dll.json', JSON.stringify(dllWebpackConfig));
     }
 
@@ -84,6 +86,7 @@ const createCompilerWithDll = (easyConfig, workspace, env) => {
         // FIXME: test
         if(program.test) {
           // webpackConfig = smp.wrap(webpackConfig);
+          log.info(`Output test.json`);
           fs.writeFileSync('./test.json', JSON.stringify(webpackConfig));
         }
 

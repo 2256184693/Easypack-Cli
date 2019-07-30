@@ -1,6 +1,6 @@
 {
   "name": "easypack-cli",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "基于Webpack的项目打包、编译工具",
   "main": "index.js",
   "scripts": {
@@ -38,7 +38,7 @@
     "inquirer": "^6.2.2",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.15",
     "memory-fs": "^0.4.1",
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.12.0",

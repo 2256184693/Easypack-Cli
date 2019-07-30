@@ -319,3 +319,26 @@ body {
   -ms-user-select: none;
   user-select: none;
 }
+
+.pointer{
+  cursor: pointer;
+}
+
+.flex-box{
+  &.column{
+    flex-direction: column;
+  }
+  &.row{
+    align-items: center;
+    flex-direction: row;
+  }
+  display: flex;
+  &>.flex-item{
+    flex-grow: 0;
+    flex-shrink: 0;
+    &.last{
+      flex-grow: 1;
+      flex-shrink: 1;
+    }
+  }
+}

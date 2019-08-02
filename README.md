@@ -14,3 +14,10 @@ $ npm link easy-cli
 4. 
 
  
+
+
+ > easy init
+
+ > easy build
+
+ > option

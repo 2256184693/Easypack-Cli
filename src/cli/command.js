@@ -43,7 +43,7 @@ program
     process.env.NODE_ENV = 'development';
     let resolveConifg = require('./resolve-config.js');
     resolveConifg.load(() => {
-      let port = program.port || V.DEFAULT_PORT;
+      let port = program.port || resolveConifg.getEasyConfig().port || V.DEFAULT_PORT;
       tasks.start({
         port
       });

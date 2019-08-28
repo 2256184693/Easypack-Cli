@@ -20,5 +20,6 @@
 
 # FIXME
 
-> Vue热更新不支持html部分(复现？)
+1. Vue热更新不支持html部分(复现？)
 
+# XXX

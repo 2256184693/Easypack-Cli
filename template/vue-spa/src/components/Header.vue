@@ -9,11 +9,11 @@
 .header {
   height: 120px;
   padding: 10px 20px;
-  background: #999;
+  background: #333;
   display: flex;
   align-items: center;
   overflow: hidden;
-  border-bottom: 1px solid #41b883;
+  border-bottom: 1px solid #fefefe;
   .logo{
     height: 100px;
   }
@@ -22,7 +22,7 @@
     flex-grow: 1;
     flex-shrink: 1;
     font-size: 32px;
-    color: #35495e;
+    color: #FFF;
   }
 }
 </style>

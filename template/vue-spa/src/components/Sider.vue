@@ -9,7 +9,7 @@
 </template>
 <script>
 export default {
-  name: "m-footer",
+  name: "common-sider",
   data() {
     return {
       navs: [
@@ -24,6 +24,7 @@ export default {
 <style lang="scss">
 .sider{
   background: #FFF;
+  border-right: 1px solid #efefef;
   width: 180px;
   padding: 15px 0;
   .nav-list{
@@ -36,14 +37,14 @@ export default {
         color: #333;
         &.router-link-active{
           color: #FFF;
-          background: #FF6701;
+          background: #333;
         }
         &:hover{
-          background: rgba($color: #FF6701, $alpha: .3);
+          background: rgba($color: #333, $alpha: .3);
           color: #FFF;
           &.router-link-active{
             color: #FFF;
-            background: #FF6701;
+            background: #333;
           }
         }
       }

@@ -1,0 +1,27 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true
+  },
+  "extends": "eslint:recommended",
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": [
+    "html"
+  ],
+  "rules": {
+    "indent": [2, 2, { "SwitchCase": 1 }],
+    "linebreak-style": [0, "unix"],
+    "semi": [0, "always"],
+    "no-console": 0,
+    "no-undef": 0,
+    "rest-spread-spacing": [2, "never"]
+  }
+}

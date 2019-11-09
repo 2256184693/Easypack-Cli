@@ -1,6 +1,6 @@
 <template>
   <div class="page-container">
-    Page2
+    Page3-Nav2
   </div>
 </template>
 <script>

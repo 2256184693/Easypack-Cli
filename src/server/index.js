@@ -58,6 +58,7 @@ class easyServer {
       const webpackConfig = data.config;
       const publicPath = webpackConfig.output.publicPath || '/';
       app.use(webpackDevMiddleware(compiler, {
+        logLevel: 'silent',
         quiet: true,
         publicPath,
         stats: {

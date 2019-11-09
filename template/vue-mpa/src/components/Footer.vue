@@ -1,5 +1,6 @@
 <template>
   <div class="footer">
+    <h3 class="title">Vue-Mpa Application Created By Easypack-Cli</h3>
     <svg
       class="pointer github-logo"
       height="62"
@@ -36,8 +37,14 @@ export default {
   height: 200px;
   background: #333;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  .title{
+    font-size: 32px;
+    padding-bottom: 30px;
+    color: #FFF;
+  }
   .github-logo {
     width: 80px;
     fill: #fff;

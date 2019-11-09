@@ -33,6 +33,7 @@ $   easy init <template-name> [project-name]
     :---|:---:|---
     basic|-|基础项目模板,包含完整的配置文件及注释。
     vue-spa|Vue|Vue的SPA应用模板。
+    vue-mpa|Vue|Vue的MPA应用模板。
 
 + `project-name` （工程的名称）
 
@@ -254,4 +255,12 @@ $   easy build
     }
     ```
 
+## TODO
 
+1. Typescript重构Cli
+
+2. React模版支持
+
+3. Lint工具支持
+   
+4. Typescript支持

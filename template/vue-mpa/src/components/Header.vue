@@ -1,28 +1,50 @@
 <template>
   <div class="header">
     <img class="logo" src="../assets/logo.png" alt="">
-    <h3 class="title">Vue-Spa Application Created By Easypack-Cli</h3>
+    <ul class="nav-list">
+      <li><a :class="{active: pathName === '/page1.html'}" href="/page1.html">Page1</a></li>
+      <li><a :class="{active: pathName === '/page2.html'}" href="/page2.html">Page2</a></li>
+      <li><a :class="{active: pathName === '/page3.html'}" href="/page3.html">Page3</a></li>
+    </ul>
   </div>
 </template>
 
 <style lang="scss">
 .header {
-  height: 120px;
-  padding: 10px 20px;
-  background: #333;
   display: flex;
   align-items: center;
+  background: #333;
   overflow: hidden;
-  border-bottom: 1px solid #fefefe;
+  padding: 0 30px;
   .logo{
-    height: 100px;
+    height: 50px;
   }
-  .title{
-    padding-left: 20px;
+  .nav-list{
+    display: flex;
     flex-grow: 1;
     flex-shrink: 1;
-    font-size: 32px;
-    color: #FFF;
+    padding-left: 30px;
+    a{
+      display: block;
+      line-height: 60px;
+      height: 60px;
+      font-size: 24px;
+      margin: 0 15px;
+      padding: 0 5px;
+      color: #FFF;
+      position: relative;
+      &.active{
+        &::after{
+          content: '';
+          width: 100%;
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          height: 3px;
+          background: #FF6701;
+        }
+      }
+    }
   }
 }
 </style>
@@ -32,9 +54,14 @@ export default {
   name: "common-header",
   data() {
     return {
-      navs: [],
+      pathName: location.pathname,
     };
-  }
+  },
+  methods: {
+    handleSelect() {
+
+    },
+  },
 };
 </script>
 

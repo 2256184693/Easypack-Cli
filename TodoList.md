@@ -4,19 +4,17 @@
 
 2. dev-server的文件管理和异常处理
 
-3. README 编写
+3. happypack集成
 
-4. happypack集成
+4. thread-loader集成(url-loader | vue-loader | babel-loader)
 
-5. thread-loader集成(url-loader | vue-loader | babel-loader)
+5. postcss.config.js
 
-6. postcss.config.js
+6. .babelrc 外置。相关配置在项目层编写，依赖在项目层安装
 
-7. .babelrc
+7. .eslintrc
 
-8. .eslintrc
-
-9.  typescript？
+8.  typescript？
 
 # FIXME
 

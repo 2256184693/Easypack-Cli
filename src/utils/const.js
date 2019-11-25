@@ -58,6 +58,6 @@ exports.DEFAULT_DLL_FILES_PATH = 'dll/dll-files.json';
 
 exports.DEFAULT_DLL_CHUNK_NAME = '__lib_[name]__';
 
-exports.DEFAULT_CACHE_PATH = '.easy_cache';
+exports.DEFAULT_CACHE_PATH = 'node_modules/.easy_cache';
 
 exports.DEFAULT_CACHE_NAME = 'cache-manifest.json';

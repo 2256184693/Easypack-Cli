@@ -14,7 +14,7 @@ const vueLoader = (opts = {
 }) => opts;
 
 const jsLoader = (opts = {
-  test: /\.jsx?$/,
+  test: /\.(jsx?|tsx?)$/,
   loader: 'babel-loader',
   options: {
     cacheDirectory: true

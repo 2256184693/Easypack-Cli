@@ -95,7 +95,7 @@ class EasyProject extends Base {
       if(loader.test) {
         if(hasLoader(loader.test, ['.vue'])) {
           hasVue = true;
-        }else if(hasLoader(loader.test, ['.js', 'jsx'])) {
+        }else if(hasLoader(loader.test, ['.js', 'jsx', '.ts', 'tsx'])) {
           hasJs = true;
         }else if(hasLoader(loader.test, ['.png', '.jpg', 'jpeg', 'webp', 'gif', '.svg'])) {
           hasImage = true;

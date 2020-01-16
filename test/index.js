@@ -1,11 +1,19 @@
-const path = require('path');
 
-const fs = require('fs');
+const ora = require('ora')
 
-var obj = {
-  a: 1,
-  b: 2,
-  c: '123'
-};
+const chalk = require('chalk')
 
-fs.writeFileSync(path.join(__dirname, 'dist/test/test.json'), JSON.stringify(obj));
+const spinner = ora()
+
+let clear = false
+// spinner.prefixText = '📄'
+
+spinner.start('Loading...')
+
+setTimeout(() => {
+  spinner.stopAndPersist({
+    text: 'Success',
+    symbol: '📄'
+  })
+}, 5000)
+

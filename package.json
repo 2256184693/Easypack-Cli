@@ -16,7 +16,7 @@
   },
   "scripts": {
     "test": "node ./test/index.js",
-    "watch": "tsc -watch -p ./"
+    "watch": "./node_modules/.bin/tsc -watch -p ./"
   },
   "bin": {
     "easy": "./bin/easy.js"
@@ -28,10 +28,17 @@
   "author": "SH",
   "license": "ISC",
   "dependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/fs-extra": "^8.0.1",
+    "@types/inquirer": "^6.5.0",
     "@types/node": "^12.12.17",
     "chalk": "^3.0.0",
     "commander": "^4.0.1",
     "didyoumean": "^1.2.1",
+    "fs-extra": "^8.1.0",
+    "inquirer": "^7.0.1",
+    "minimist": "^1.2.0",
+    "ora": "^4.0.3",
     "semver": "^6.3.0",
     "typescript": "^3.7.3"
   },

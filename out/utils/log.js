@@ -5,21 +5,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const chalk = require("chalk");
 const program = require("commander");
-const type_1 = require("./type");
-function getColor() {
-    let color = 'green';
-    color = 'yellow';
-    return color;
-}
+const tools_1 = require("./tools");
 class Logger {
     constructor(namespace = '') {
         this.__namespace = namespace;
     }
     print(messageType, message, color) {
-        if (type_1.default(message) === 'object') {
+        if (tools_1.type(message) === 'object') {
             message = JSON.stringify(message);
         }
-        else if (type_1.default(message) === 'array') {
+        else if (tools_1.type(message) === 'array') {
             message = message.join('\n');
         }
         let timeStr = '', name = '';
@@ -33,18 +28,25 @@ class Logger {
             chalk.bgCyan(name) +
             chalk[color](message));
     }
-    info(message, color = 'blue') {
+    info(message, color = 'cyan') {
         this.print('info', message, color);
     }
-    success(message, color = 'blue') {
+    success(message, color = 'green') {
         this.print('success', message, color);
     }
-    warn(message, color = 'blue') {
+    warn(message, color = 'yellow') {
         this.print('info', message, color);
     }
-    error(message, color = 'blue') {
+    error(message, color = 'red') {
         this.print('info', message, color);
+    }
+    out(...messageList) {
+        console.log(messageList.map((msg) => {
+            if (tools_1.type(msg) === 'object') {
+                return JSON.stringify(msg, null, 2);
+            }
+            return msg;
+        }).join('\n'));
     }
 }
-exports.default = Logger;
-//# sourceMappingURL=log.js.map
+exports.default = new Logger();

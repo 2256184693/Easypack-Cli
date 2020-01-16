@@ -1,15 +1,19 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "declaration": false,
     "target": "ES6",
+    "rootDir": "src",
     "outDir": "out",
     "lib": [
       "ES6"
     ],
     "resolveJsonModule": true,
-    "sourceMap": true,
-    "rootDir": "src",
     "strict": true,
+    "typeRoots": [
+      "./typings",
+      "./node_modules/@types"
+    ]
   },
   "exclude": [
 		"node_modules",
@@ -18,6 +22,7 @@
     "/src.old"
   ],
   "include": [
-    "./src/",
+    "src/**/*.ts",
+    "typings/**/*.ts"
   ]
 }

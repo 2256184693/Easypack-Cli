@@ -2,19 +2,11 @@
  * @description Log
  */
 
-import * as chalk from 'chalk';
+import * as chalk from 'chalk'
 
-import * as program from 'commander';
+import * as program from 'commander'
 
-import type from './type';
-
-function getColor(): keyof chalk.Chalk {
-  let color: keyof chalk.Chalk = 'green';
-
-  color = 'yellow';
-
-  return color;
-}
+import { type } from './tools'
 
 export type LogLevel =
   | 'info'
@@ -30,6 +22,11 @@ export interface Log {
   success: Function;
   warn: Function;
   error: Function;
+}
+
+export interface SpinnerOptions {
+  text?: string;
+  action: Function;
 }
 
 class Logger {
@@ -56,18 +53,27 @@ class Logger {
       (chalk[color] as chalk.Chalk)(message)
     )
   }
-  info(message: any, color: keyof chalk.Chalk = 'blue') {
-    this.print('info', message, color);
+  info(message: any, color: keyof chalk.Chalk = 'cyan') {
+    this.print('info', message, color)
   }
-  success(message: any, color: keyof chalk.Chalk = 'blue') {
-    this.print('success', message, color);
+  success(message: any, color: keyof chalk.Chalk = 'green') {
+    this.print('success', message, color)
   }
-  warn(message: any, color: keyof chalk.Chalk = 'blue') {
-    this.print('info', message, color);
+  warn(message: any, color: keyof chalk.Chalk = 'yellow') {
+    this.print('info', message, color)
   }
-  error(message: any, color: keyof chalk.Chalk = 'blue') {
-    this.print('info', message, color);
+  error(message: any, color: keyof chalk.Chalk = 'red') {
+    this.print('info', message, color)
+  }
+  out(...messageList: any[]) {
+
+    console.log(messageList.map((msg) => {
+      if(type(msg) === 'object') {
+        return JSON.stringify(msg, null, 2)
+      }
+      return msg
+    }).join('\n'));
   }
 }
 
-export default Logger;
+export default new Logger();

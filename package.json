@@ -12,7 +12,10 @@
     "url": "https://github.com/2256184693/Easypack-Cli/issues"
   },
   "scripts": {
-    "test": "node ./test/index.js"
+    "test": "node ./test/index.js",
+    "preversion": "npm run test",
+    "version": "git add .",
+    "postversion": "git push && git push --tag && npm publish"
   },
   "bin": {
     "easy": "./bin/index.js"

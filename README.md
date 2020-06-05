@@ -34,6 +34,8 @@ $   easy init <template-name> [project-name]
     basic|-|基础项目模板,包含完整的配置文件及注释。
     vue-spa|Vue|Vue的SPA应用模板。
     vue-mpa|Vue|Vue的MPA应用模板。
+    react|React|React单页应用模版
+    react-ts|React|React+Typescript单页应用模版
 
 + `project-name` （工程的名称）
 

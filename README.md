@@ -261,8 +261,8 @@ $   easy build
 
 1. Typescript重构Cli
 
-2. React模版支持
+2. React模版支持(done)
 
 3. Lint工具支持
    
-4. Typescript支持
+4. Typescript支持(done)
